@@ -56,6 +56,9 @@ See `docs/` for the full walkthrough, complete API reference, HTML/JS integratio
 lifecycle rules, working examples, and current backend limitations. If you're upgrading a plugin
 from Prisma UI F4 1.0, see [`docs/1.0-vs-2.0.md`](docs/1.0-vs-2.0.md) for what changed.
 
+If you're using an AI assistant to help build a plugin, see [`mcp-server/`](mcp-server/) - an MCP
+server that gives it live access to this API reference and a plugin-scaffolding tool.
+
 ## File Layout (installed)
 
 ```
