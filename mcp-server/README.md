@@ -36,14 +36,17 @@ Build one yourself:
 
 ```
 cd mcp-server
+npm install
+npm run build
 npm install --omit=dev
 npm run pack
 npm install
 ```
 
-(the last `npm install` restores `typescript`/`@types/node` for continued development - the
-`--omit=dev` install before packing just keeps the bundle from including devDependencies it
-doesn't need at runtime). This produces `prisma-mcp.mcpb`.
+Build first (needs `typescript`, a devDependency), *then* strip devDependencies before packing -
+otherwise the bundle includes `typescript`/`@types/node` (~19MB) it never needs at runtime. The
+last `npm install` restores them afterward for continued development. This produces
+`prisma-mcp.mcpb`.
 
 ### Rate limits
 
