@@ -12,7 +12,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "pack": "npm run build && npx --yes @anthropic-ai/mcpb pack . prisma-mcp.mcpb"
   },
   "keywords": [
     "mcp",

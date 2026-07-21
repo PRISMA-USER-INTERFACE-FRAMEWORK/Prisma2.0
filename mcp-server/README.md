@@ -10,6 +10,8 @@ server reflects that on the next call.
 
 ## Install
 
+### Claude Code
+
 Clone this repo and build once:
 
 ```
@@ -25,6 +27,23 @@ server), pointing at the built entrypoint:
 ```
 claude mcp add prisma -- node /full/path/to/Prisma2.0/mcp-server/dist/index.js
 ```
+
+### Claude Desktop (and Claude Code, via bundle)
+
+A packaged `.mcpb` bundle (built with [`@anthropic-ai/mcpb`](https://github.com/modelcontextprotocol/mcpb))
+installs with no manual build step - drag the file into Claude Desktop's Settings → Extensions.
+Build one yourself:
+
+```
+cd mcp-server
+npm install --omit=dev
+npm run pack
+npm install
+```
+
+(the last `npm install` restores `typescript`/`@types/node` for continued development - the
+`--omit=dev` install before packing just keeps the bundle from including devDependencies it
+doesn't need at runtime). This produces `prisma-mcp.mcpb`.
 
 ### Rate limits
 

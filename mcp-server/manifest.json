@@ -1,0 +1,48 @@
+{
+  "manifest_version": "0.2",
+  "name": "prisma-mcp",
+  "version": "1.0.0",
+  "description": "Live API reference, guides, and plugin scaffolding for PrismaUI_F4, fetched from the Prisma2.0 GitHub repo.",
+  "long_description": "Gives an AI assistant direct access to PrismaUI_F4's real API surface: every public method's signature and docs, the top-level guides (getting-started, examples, html-views, limitations, view-lifecycle, api-reference, 1.0-vs-2.0), the raw API header, and a tool that scaffolds a new plugin project from the official example. Everything is fetched live from prisma2/main at call time, so it never goes stale.",
+  "author": {
+    "name": "NomadsReach",
+    "url": "https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK"
+  },
+  "homepage": "https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma2.0/tree/main/mcp-server",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma2.0.git"
+  },
+  "license": "MIT",
+  "keywords": ["prismaui", "fallout4", "f4se", "mcp"],
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/dist/index.js"
+      ],
+      "env": {
+        "GITHUB_TOKEN": "${user_config.github_token}"
+      }
+    }
+  },
+  "user_config": {
+    "github_token": {
+      "type": "string",
+      "title": "GitHub token (optional)",
+      "description": "Raises GitHub's API rate limit from 60/hour to 5000/hour. Leave blank to use unauthenticated requests.",
+      "sensitive": true,
+      "required": false
+    }
+  },
+  "tools": [
+    { "name": "list_api_methods", "description": "List every public PrismaUI_F4 API method, optionally filtered by interface version." },
+    { "name": "get_api_method", "description": "Get full docs for one API method by name." },
+    { "name": "search_docs", "description": "Keyword search across every method doc and guide." },
+    { "name": "get_guide", "description": "Get the full text of one of the top-level guides." },
+    { "name": "get_header", "description": "Get the current PrismaUI_F4_API.h header, verbatim." },
+    { "name": "scaffold_plugin", "description": "Write a new, ready-to-build plugin project copied from the official example." }
+  ]
+}
