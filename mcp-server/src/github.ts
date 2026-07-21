@@ -1,6 +1,6 @@
 import { GitTreeEntry, GitTreeResponse, REPO_BRANCH, REPO_NAME, REPO_OWNER } from "./types.js";
 
-const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+const CACHE_TTL_MS = 10 * 60 * 1000;
 const FETCH_TIMEOUT_MS = 15 * 1000;
 
 interface CacheEntry<T> {
@@ -36,7 +36,6 @@ function githubApiHeaders(): Record<string, string> {
   return headers;
 }
 
-/** Fetches a single file's raw text content from the repo at the pinned branch. */
 export async function fetchRawFile(path: string): Promise<string> {
   const cacheKey = `raw:${path}`;
   const cached = getCached<string>(cacheKey);
@@ -55,7 +54,6 @@ export async function fetchRawFile(path: string): Promise<string> {
   return text;
 }
 
-/** Fetches the full recursive file tree for the repo at the pinned branch. */
 export async function fetchTree(): Promise<GitTreeEntry[]> {
   const cacheKey = "tree";
   const cached = getCached<GitTreeEntry[]>(cacheKey);
@@ -79,7 +77,6 @@ export async function fetchTree(): Promise<GitTreeEntry[]> {
   return data.tree;
 }
 
-/** Lists blob paths under a given prefix (e.g. "docs/api/" or "example-f4se-plugin/"). */
 export async function listPathsUnder(prefix: string): Promise<string[]> {
   const tree = await fetchTree();
   return tree

@@ -25,8 +25,7 @@ export async function getApiMethodDoc(name: string): Promise<ApiMethodDoc> {
     return { name, path, content };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    // Only treat a real "not found" as an unknown method name - a network failure or rate
-    // limit should surface as itself, not get mislabeled as a bad method name.
+    // Only a real 404 means an unknown method name; other errors should surface as themselves.
     if (!message.includes("HTTP 404")) {
       throw err;
     }
@@ -41,14 +40,13 @@ export async function getApiMethodDoc(name: string): Promise<ApiMethodDoc> {
 }
 
 export function extractSinceVersion(content: string): string | undefined {
-  // Docs write the full interface class name, e.g. "**Since:** `IVPrismaUI5`".
+  // Docs write the full class name, e.g. "**Since:** `IVPrismaUI5`", not "V5".
   const match = content.match(/\*\*Since:\*\*\s*`IVPrismaUI(\d+)`/);
   return match ? `V${match[1]}` : undefined;
 }
 
 export function extractSummary(content: string): string {
-  // Summary is the first paragraph of prose after the first fenced code block
-  // (the C++ signature) and before the next "## " heading.
+  // First paragraph after the signature's code fence, before the next "## " heading.
   const parts = content.split("```");
   const afterSignature = parts.length >= 3 ? parts.slice(2).join("```") : content;
   const beforeNextHeading = afterSignature.split(/\n##\s/)[0];

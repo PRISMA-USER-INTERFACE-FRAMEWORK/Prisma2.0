@@ -3,8 +3,7 @@ import { dirname, join, relative, resolve } from "node:path";
 import { fetchRawFile, listPathsUnder } from "../github.js";
 
 const EXAMPLE_PREFIX = "example-f4se-plugin/";
-// The literal token used throughout the example plugin's source, build script,
-// and xmake config for its own name - substituting it renames the whole project.
+// Substituting this token throughout the fetched files renames the whole project.
 const EXAMPLE_TOKEN = "PrismaUI-F4-Example";
 
 const PLUGIN_NAME_PATTERN = /^[A-Za-z][A-Za-z0-9_-]*$/;
@@ -14,12 +13,7 @@ export interface ScaffoldResult {
   filesWritten: string[];
 }
 
-/**
- * Checks the target path is safe to write into: either it doesn't exist yet, or it's an
- * empty directory, or the caller passed overwrite=true. Throws with a clear, specific
- * message otherwise - including the case where targetPath exists but is a regular file,
- * which would otherwise surface later as a confusing ENOTDIR mid-write.
- */
+// Checked upfront so a file-not-a-directory target fails clearly instead of mid-write.
 async function assertWritableTarget(absTarget: string, overwrite: boolean): Promise<void> {
   let stats;
   try {
@@ -61,15 +55,12 @@ export async function scaffoldPlugin(
     throw new Error(`Found no files under "${EXAMPLE_PREFIX}" in the repo - this shouldn't happen.`);
   }
 
-  // Fetch everything before writing anything, so a mid-fetch failure (network blip, rate
-  // limit) never leaves a half-scaffolded project on disk.
+  // Fetch everything before writing, so a mid-fetch failure never leaves a half-written project.
   const files = await Promise.all(
     sourcePaths.map(async (sourcePath) => {
       const relativePath = sourcePath.slice(EXAMPLE_PREFIX.length);
       const destPath = resolve(absTarget, relativePath);
       if (relative(absTarget, destPath).startsWith("..")) {
-        // Defense in depth - every path here comes from GitHub's own tree API for this
-        // exact repo, so this should be unreachable, but never write outside absTarget.
         throw new Error(`Refusing to write outside the target directory: ${relativePath}`);
       }
       const rawContent = await fetchRawFile(sourcePath);
