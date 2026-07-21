@@ -4,6 +4,10 @@ Every method has its own detailed page under [`api/`](api/) - signature, paramet
 threading, gotchas, and an example where one adds value. This page is the index and the
 cross-cutting concepts that apply to more than one method.
 
+Using an AI assistant? [`prisma-mcp`](../mcp-server/) gives it live tools that cover this entire
+page - looking up any method, searching by keyword, and reading the current header - so it doesn't
+have to rely on you pasting these docs in manually.
+
 ## Overview
 
 The public API is declared entirely in `PrismaUI_F4_API.h`. Copy that single header into your

@@ -7,6 +7,11 @@ project - if you've done this before, skip to [Step 2](#step-2-clone-the-example
 By the end, pressing **F4** in-game will pop up a small green terminal-style box with a title and
 a message. That's it - a minimal starting point you then build your real UI on top of.
 
+**Using Claude or another AI assistant to help write your plugin?** Install
+[`prisma-mcp`](../mcp-server/) first - it gives your assistant live, always-current access to
+every API method's real signature and docs instead of it guessing from training data. This is
+the recommended way to build a PrismaUI plugin with AI assistance.
+
 ---
 
 ## Step 0: Install what you need

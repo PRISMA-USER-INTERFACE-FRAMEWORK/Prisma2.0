@@ -10,6 +10,25 @@ HTML/CSS/JavaScript overlays - menus, HUDs, settings panels, terminals - without
 Scaleform or the game's native UI system. This framework is **CEF-only**: there is no Ultralight
 dependency, SDK, or fallback path.
 
+## Building with an AI Assistant? Install prisma-mcp first
+
+If you're using Claude, or any other MCP-capable AI assistant, to help write a PrismaUI plugin,
+**install [`prisma-mcp`](mcp-server/) before you start.** It's the recommended way to work with
+this framework - without it, your assistant is guessing at method signatures from whatever it was
+trained on (which may be a different version, or wrong entirely); with it, every answer comes from
+the actual, current API.
+
+`prisma-mcp` gives your assistant live tools to look up every method's real signature and docs,
+search the guides, read the current API header verbatim, and scaffold a whole new plugin project
+from the official example - all fetched fresh from this repo, so nothing it tells you can go stale.
+
+```
+claude mcp add prisma -- node /full/path/to/Prisma2.0/mcp-server/dist/index.js
+```
+
+See [`mcp-server/README.md`](mcp-server/README.md) for the full install steps (including a
+one-click `.mcpb` bundle for Claude Desktop) and the complete tool list.
+
 ## How It Works
 
 `PrismaUI_F4.dll` (the thin plugin-facing shim, `/MD`) loads `PrismaUI_F4_Host.dll` (`/MT`), which
@@ -54,10 +73,8 @@ Fallout 4 process
 
 See `docs/` for the full walkthrough, complete API reference, HTML/JS integration guide, view
 lifecycle rules, working examples, and current backend limitations. If you're upgrading a plugin
-from Prisma UI F4 1.0, see [`docs/1.0-vs-2.0.md`](docs/1.0-vs-2.0.md) for what changed.
-
-If you're using an AI assistant to help build a plugin, see [`mcp-server/`](mcp-server/) - an MCP
-server that gives it live access to this API reference and a plugin-scaffolding tool.
+from Prisma UI F4 1.0, see [`docs/1.0-vs-2.0.md`](docs/1.0-vs-2.0.md) for what changed. Using an
+AI assistant? See [Building with an AI Assistant?](#building-with-an-ai-assistant-install-prisma-mcp-first) above.
 
 ## File Layout (installed)
 
