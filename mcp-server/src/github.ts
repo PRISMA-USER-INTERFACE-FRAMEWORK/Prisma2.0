@@ -1,6 +1,7 @@
 import { GitTreeEntry, GitTreeResponse, REPO_BRANCH, REPO_NAME, REPO_OWNER } from "./types.js";
 
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+const FETCH_TIMEOUT_MS = 15 * 1000;
 
 interface CacheEntry<T> {
   value: T;
@@ -42,7 +43,10 @@ export async function fetchRawFile(path: string): Promise<string> {
   if (cached !== undefined) return cached;
 
   const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BRANCH}/${path}`;
-  const res = await fetch(url, { headers: { "User-Agent": "prisma-mcp" } });
+  const res = await fetch(url, {
+    headers: { "User-Agent": "prisma-mcp" },
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  });
   if (!res.ok) {
     throw new Error(`Failed to fetch ${path}: HTTP ${res.status}`);
   }
@@ -58,7 +62,10 @@ export async function fetchTree(): Promise<GitTreeEntry[]> {
   if (cached !== undefined) return cached;
 
   const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/${REPO_BRANCH}?recursive=1`;
-  const res = await fetch(url, { headers: githubApiHeaders() });
+  const res = await fetch(url, {
+    headers: githubApiHeaders(),
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  });
   if (!res.ok) {
     throw new Error(
       `Failed to fetch repo tree: HTTP ${res.status}. If you're hitting GitHub's rate limit, set a GITHUB_TOKEN env var.`

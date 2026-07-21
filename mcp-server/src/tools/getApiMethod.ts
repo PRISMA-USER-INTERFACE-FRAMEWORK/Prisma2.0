@@ -24,6 +24,12 @@ export async function getApiMethodDoc(name: string): Promise<ApiMethodDoc> {
     const content = await fetchRawFile(path);
     return { name, path, content };
   } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    // Only treat a real "not found" as an unknown method name - a network failure or rate
+    // limit should surface as itself, not get mislabeled as a bad method name.
+    if (!message.includes("HTTP 404")) {
+      throw err;
+    }
     const allNames = await listApiMethodNames();
     const lowerName = name.toLowerCase();
     const closeMatches = allNames.filter((n) => n.toLowerCase().includes(lowerName) || lowerName.includes(n.toLowerCase()));
