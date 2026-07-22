@@ -87,6 +87,7 @@ thread. See [Threading](#threading) below.
 | [`IVPrismaUI7`](#ivprismaui7) | [`SuppressVanillaMenuIf`](api/SuppressVanillaMenuIf.md), [`EnableActivateChoiceFilter`](api/EnableActivateChoiceFilter.md), [`SuppressActivateChoicePerk`](api/SuppressActivateChoicePerk.md) |
 | [`IVPrismaUI8`](#ivprismaui8) | [`EnumerateViewsEx`](api/EnumerateViewsEx.md) (owner-tagged), [`GetActivateChoiceLabel`](api/GetActivateChoiceLabel.md), [`TriggerActivateChoice`](api/TriggerActivateChoice.md), [`GetViewHealth`](api/GetViewHealth.md), [`SetViewOffscreenSize`](api/SetViewOffscreenSize.md) |
 | [`IVPrismaUI9`](#ivprismaui9) | Controller/keyboard button-prompt API - [`IsUsingGamepad`](api/IsUsingGamepad.md), [`GetControllerStyle`](api/GetControllerStyle.md)/[`SetControllerStyle`](api/SetControllerStyle.md), [`NoteInputDevice`](api/NoteInputDevice.md), [`GetButtonPrompt`](api/GetButtonPrompt.md), [`GetGamepadButtonName`](api/GetGamepadButtonName.md). Also [`SetViewOwnsEscape`](api/SetViewOwnsEscape.md) and [`SetViewOffscreenBackground`](api/SetViewOffscreenBackground.md) - see the compatibility note below. |
+| [`IVPrismaUI10`](#ivprismaui10) | View roles + "is another panel in the way" - [`SetViewRole`](api/SetViewRole.md)/[`GetViewRole`](api/GetViewRole.md), [`GetFocusedView`](api/GetFocusedView.md), [`IsAnyPanelVisible`](api/IsAnyPanelVisible.md) |
 
 Always request the highest version you need. If the installed PrismaUI_F4 is older than your
 requested version, `RequestPluginAPI` returns `nullptr` - handle this gracefully.
@@ -252,6 +253,26 @@ behavior.
 now. The vtable addresses they hook are hardcoded and haven't been mapped for Next-Gen/AE yet, so
 on those runtimes both calls just log a warning and do nothing instead of patching a guessed
 address.
+
+## IVPrismaUI10
+
+Extends `IVPrismaUI9`. View roles, plus a correct answer to "is another Prisma UI in the way right
+now?"
+
+`EnumerateViews` (V4) reports **every** registered view, including always-on HUD widgets. A plugin
+that opens its own menu and wants to avoid stacking on top of another UI cannot use that list
+directly - "some other view exists and isn't hidden" is true the moment any HUD mod is running, so
+the check never lets the menu open. V10 fixes that: declare your view's role, then ask
+`IsAnyPanelVisible`, which only counts focused views and views explicitly declared as interactive
+panels.
+
+- [`SetViewRole`](api/SetViewRole.md) / [`GetViewRole`](api/GetViewRole.md)
+- [`GetFocusedView`](api/GetFocusedView.md)
+- [`IsAnyPanelVisible`](api/IsAnyPanelVisible.md)
+
+Unlike the two methods appended to `IVPrismaUI9` after it shipped (see the compatibility note above),
+these are a proper new interface - `RequestPluginAPI<IVPrismaUI10>()` returns `nullptr` cleanly on an
+older `PrismaUI_F4.dll`, so the whole-version guarantee applies.
 
 ---
 
