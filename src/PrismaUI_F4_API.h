@@ -20,7 +20,7 @@ namespace PRISMA_UI_API {
     constexpr const auto PrismaUIPluginName = "PrismaUI_F4";
 
     // Available PrismaUI interface versions
-    enum class InterfaceVersion : uint8_t { V1, V2, V3, V4, V5, V6, V7, V8, V9 };
+    enum class InterfaceVersion : uint8_t { V1, V2, V3, V4, V5, V6, V7, V8, V9, V10 };
 
     typedef void (*OnDomReadyCallback)(PrismaView view);
     typedef void (*JSCallback)(const char* result);
@@ -382,6 +382,38 @@ namespace PRISMA_UI_API {
         virtual void SetViewOffscreenBackground(PrismaView view, uint32_t argb) noexcept = 0;
     };
 
+    // What kind of UI a view is. EnumerateViews reports EVERY view, including passive always-on
+    // HUD widgets, so a plugin that treats "another view exists and isn't hidden" as "another UI is
+    // in the way" gets a false positive on any setup running a HUD mod. Declare a role and use
+    // IsAnyPanelVisible() (below) to ask that question correctly.
+    enum class ViewRole : uint32_t {
+        kUnspecified = 0,  // default -- never counted as an interactive panel
+        kWidget = 1,       // passive always-on overlay (HUD element); never blocks anything
+        kPanel = 2,        // interactive panel that occupies the screen and takes input
+    };
+
+    // PrismaUI modder interface v10 (extends v9)
+    class IVPrismaUI10 : public IVPrismaUI9 {
+    protected:
+        ~IVPrismaUI10() = default;
+
+    public:
+        // Declare what this view is. Defaults to kUnspecified, which never blocks anything.
+        virtual void SetViewRole(PrismaView view, ViewRole role) noexcept = 0;
+        virtual ViewRole GetViewRole(PrismaView view) noexcept = 0;
+
+        // The view that currently holds framework focus, or 0 if none. HasAnyActiveFocus() (V1)
+        // answers the yes/no; this tells you which view.
+        virtual PrismaView GetFocusedView() noexcept = 0;
+
+        // "Is another Prisma UI on screen and interactive right now?" -- the question to ask before
+        // opening your own panel. True if any view other than ignoreView is currently focused, or is
+        // declared kPanel and not hidden. Passive HUD widgets and undeclared views never make this
+        // true, so it does not fire just because a HUD is up. Pass 0 for ignoreView to consider every
+        // view. Prefer this over walking EnumerateViews yourself.
+        virtual bool IsAnyPanelVisible(PrismaView ignoreView) noexcept = 0;
+    };
+
     // Maps an interface type to its version, so you can only ask for one that exists.
     template <typename T>
     struct InterfaceVersionMap;
@@ -429,6 +461,11 @@ namespace PRISMA_UI_API {
     template <>
     struct InterfaceVersionMap<IVPrismaUI9> {
         static constexpr InterfaceVersion version = InterfaceVersion::V9;
+    };
+
+    template <>
+    struct InterfaceVersionMap<IVPrismaUI10> {
+        static constexpr InterfaceVersion version = InterfaceVersion::V10;
     };
 
     typedef void* (*RequestPluginAPIFunc)(InterfaceVersion interfaceVersion);

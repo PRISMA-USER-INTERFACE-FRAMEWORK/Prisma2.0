@@ -374,3 +374,34 @@ if (propVal !== null && propVal !== undefined) {
 `window.prisma` is available immediately - no wait needed. However, `getProperty` calls may return
 `null` if the Papyrus VM is not yet ready (e.g. if called before `kPostLoadGame`). For best results,
 call property reads after the game has finished loading.
+
+---
+
+## Fallout 4 VR (`IVPrismaUIVR1`)
+
+> **Preview, not released, not yet verified in a headset.** See
+> [vr-extension.md](api/vr-extension.md) before writing anything against it.
+
+Fallout 4 VR is served by a separate provider DLL, `PrismaUI_F4VR.dll`, built against CommonLibF4VR.
+It is not a mode of `PrismaUI_F4.dll`, because VR needs a different CommonLib and a different game
+executable. The base API behaves identically there.
+
+Spatial presentation is **additive**, requested separately so the base V1 to V10 vtable is untouched:
+
+```cpp
+auto* vr = PRISMA_UI_VR_API::RequestPluginVRAPI<PRISMA_UI_VR_API::IVPrismaUIVR1>();
+if (!vr) { /* flat Fallout 4, or an older provider */ }
+```
+
+| Method | Purpose |
+|---|---|
+| `GetSpatialCapabilities` | What this provider actually supports. Check it rather than assuming. |
+| `SubmitSpatialUpdate` | Place a view: head-locked, world billboard, or oriented world quad. |
+| `GetSpatialState` | What the renderer last applied, including `appliedSequence`. |
+| `SubmitSpatialPointerUpdate` | World-space controller ray. Becomes ordinary mouse events for the page. |
+| `CancelSpatialPointer` | Release a held button and clear hover. |
+| `GetSpatialPointerState` | Hit distance, UV and pixel of the last applied ray. |
+| `CreateViewWithOptions` | Create a view with a network access policy attached. |
+| `SetNetworkAccessPolicy` / `GetNetworkAccessPolicy` | Per-view network restriction. Read the limitation note first. |
+
+Full reference, worked examples and the known limitations: [vr-extension.md](api/vr-extension.md).
