@@ -88,6 +88,34 @@ vr->SubmitSpatialPointerUpdate(view, &pointer);
 `CancelSpatialPointer` releases any held button and clears hover, which matters when the controller
 is holstered or the view is hidden mid-drag.
 
+### Reading back what actually happened
+
+Submitting a pointer update is one-way, so `GetSpatialPointerState` is how you find out what the
+framework did with it.
+
+```cpp
+PRISMA_UI_VR_API::SpatialPointerStateV1 state{};
+state.structSize = sizeof(state);
+
+if (vr->GetSpatialPointerState(view, &state) == PRISMA_UI_VR_API::SpatialResult::Success) {
+    const bool hitting = state.hitDistance >= 0.0f;
+    // state.pixelX / pixelY   where the ray landed on the page
+    // state.hitUv[0] / [1]    the same point in UV space
+    // state.buttonLevels      which buttons the framework currently considers held
+}
+```
+
+Two fields are worth knowing about:
+
+- `acceptedSequence` and `appliedSequence` let you tell "the framework took my update" apart from
+  "the framework has actually acted on it." They're the sequence numbers you set on the update.
+- `replacedPendingUpdateCount` counts updates that were superseded before they were applied. If it
+  climbs, you're submitting faster than the frame rate consumes, which is wasted work rather than
+  smoother pointing.
+
+`lastApplyResult` carries the result of the most recent apply, so a pointer that looks dead can be
+diagnosed without adding your own logging.
+
 ## Ask before you assume
 
 `GetSpatialCapabilities` reports what this provider actually delivers: supported modes, feature bits,

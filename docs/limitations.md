@@ -26,12 +26,26 @@ via Chromium's GPU pipeline; no flag disables it in this framework's CEF configu
 
 ## Rendering
 
-Views are composited via CEF's **GPU shared-texture path** (`OnAcceleratedPaint`), not a CPU
-pixel-buffer blit - the framework logs an error if the CPU `OnPaint` path is ever hit instead,
-since that would mean the GPU path failed to come up. There is no explicit FPS cap configured.
-Heavy CSS effects (`box-shadow`, `backdrop-filter`, large blurs) are not free, but general
-performance advice for any GPU-composited Chromium surface applies here - avoid stacking many
-expensive filters on elements that redraw every frame.
+Views are composited via CEF's **GPU shared-texture path** (`OnAcceleratedPaint`) on Windows, not a
+CPU pixel-buffer blit. There is no explicit FPS cap configured. Heavy CSS effects (`box-shadow`,
+`backdrop-filter`, large blurs) are not free, but general performance advice for any GPU-composited
+Chromium surface applies here - avoid stacking many expensive filters on elements that redraw every
+frame.
+
+### Linux and Proton
+
+The GPU shared-texture path has no equivalent under wine/Proton, so Chromium never hands the
+framework a frame there and views used to come out blank. A **software fallback** now detects that
+and takes over automatically, so views render.
+
+It is a fallback, not a free ride. Cost scales with how many pixels change per frame, roughly
+linearly, because it is a copy rather than a shared handle. A static view is effectively free
+(microseconds, it early-outs when nothing is dirty), which covers HUDs and closed menus. A
+full-screen view animating most of its surface at 1440p is the expensive end. If you are targeting
+Deck or Proton users, prefer animating a small region over repainting the whole page.
+
+Nothing about this changes Windows behaviour, and nothing about it needs handling in your plugin.
+It is chosen at runtime.
 
 ---
 

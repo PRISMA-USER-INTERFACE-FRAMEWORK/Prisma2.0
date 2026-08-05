@@ -2,7 +2,7 @@
 
 **This is a beta release.** The CEF backend is new; see
 [`docs/1.0-vs-2.0.md`](docs/1.0-vs-2.0.md) for what changed from Prisma UI F4 1.0 and its current
-known limitations.
+known limitations, and [`CHANGELOG.md`](CHANGELOG.md) for what has landed since.
 
 **PrismaUI_F4** is an F4SE plugin that embeds **CEF** (Chromium Embedded Framework - a real
 Chromium, currently CEF 147) into Fallout 4. It lets mod authors create fully interactive
