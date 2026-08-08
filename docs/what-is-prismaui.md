@@ -69,7 +69,7 @@ g_api->RegisterJSListener(view, "onClose", [](const char*) {
 
 ## What it is NOT
 
-**It does not replace or modify Scaleform menus.** PrismaUI runs alongside the vanilla UI, not inside it. The Pip-Boy is still Scaleform. PrismaUI is a separate layer on top.
+**It does not edit Scaleform SWF files.** PrismaUI renders on a separate layer above the game. However, it can suppress or hide specific vanilla HUD widgets and menus via the API — so you can replace them with your own HTML UI without touching a SWF. The suppression is done at runtime, not by patching game assets.
 
 **It is not a visual editor.** You write HTML and CSS directly. There's a companion tool called **PrismaDesigner** that lets you preview your layout in real time without launching the game, but your source files are still plain code.
 
