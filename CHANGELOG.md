@@ -1,157 +1,147 @@
 # Changelog
 
-What's changed in **PrismaUI_F4**, newest first. Each release is a dropdown — click a section to
-expand it.
-
-This file starts partway through 2.0's life, so the early 2.0.x point releases aren't broken out
-individually. Everything below has landed since the 2.0 beta went public.
+PrismaUI_F4 release history, newest first. Click a date to expand it.
 
 ---
 
-## 2026-08-08 — input, reliability & API polish
-
-The current beta update. Gamepad input no longer leaks through to the game, the view-health API
-actually reports now, and there's tooling to keep your copy of the API header honest. Full detail
-in the dropdowns below.
-
 <details open>
-<summary><strong>🎮 Input, focus &amp; cursor</strong></summary>
+<summary><strong>2026-08-08</strong></summary>
 
-- **Gamepad buttons no longer double up on the game.** When a controller drove a focused Prisma
-  view, the same button press was *also* reaching whatever was underneath. The sharp case: a view
-  open over the pause menu, where the D-pad moved the pause menu's own selection while you
-  navigated the view, and **A** could fire its highlighted entry — Load Game, or Quit to Desktop.
-  A routed pad button is now consumed on the menu chain, so it goes to your view and nowhere else.
-  Ordinary gameplay input is untouched.
-- **The mouse was stuck in a smaller box.** If anything else had confined the cursor earlier in
-  the session — the Pip-Boy being the usual culprit — we inherited that box instead of resetting
-  to the full screen, so clicks near the edges went nowhere. Now cleared on every `Focus()` call,
-  not just the first of the session.
-- **Alt+F4 stopped working while a view held input capture.** Fixed twice, honestly. The first fix
-  depended on plugin load order, which nobody can rely on, so it's now a framework-level keyboard
-  hook that works no matter what else is installed.
-- Escape-key ownership, input routing and mesh binding all got fixes from a full pass over that
-  code.
+### Input and focus
 
-</details>
+- **Gamepad buttons no longer pass through to the game while a view has focus.** When a controller
+  drove a focused Prisma view, the same button press was reaching whatever was underneath it as well.
+  The sharp case was a view open over the pause menu, where D-pad moved the pause menu's own
+  selection and A could fire its highlighted entry, including Load Game or Quit to Desktop. A routed
+  button is now consumed on the menu chain so it goes to your view and nowhere else. Ordinary
+  gameplay input (outside a focused view) is untouched.
 
-<details open>
-<summary><strong>🩺 View health &amp; reliability</strong></summary>
+- **The cursor was constrained to a smaller box after certain screens.** If anything confined the
+  cursor earlier in the session (the Pip-Boy is the most common cause), that constraint was inherited
+  instead of being reset to the full screen, so clicks near the edges went nowhere. Cleared on every
+  Focus call now, not just the first of the session.
 
-- **`GetViewHealth` and `RegisterViewErrorSink` actually report now.** They were in the API but
-  wired to nothing — a view's health never left "live," even when its page failed to load. They
-  now report load failures, JavaScript errors, DOM-ready timeouts, and an unresponsive renderer.
-- **A view pointed at a missing HTML file used to look like it loaded fine.** A 404 came back as a
-  "successful" empty page, reached DOM-ready, and reported healthy. It's now correctly flagged as a
-  load failure, so a typo in a view path is something you can actually detect instead of chasing a
-  blank overlay.
-- **`CreateView()` could hang the game at startup.** If your plugin called it during
-  `kGameDataReady`, it waited on framework init that was itself queued behind your plugin on the
-  same thread — a self-deadlock. It now brings the backend up on the calling thread, so it just
-  works wherever you call it from.
+- **Alt+F4 stopped working while a view held input capture.** Fixed at the framework level so it
+  works regardless of plugin load order.
 
-</details>
+- General cleanup pass over escape-key ownership, input routing, and mesh-view input binding.
 
-<details>
-<summary><strong>🧩 New &amp; updated API</strong></summary>
+### View health and reliability
 
-`IVPrismaUI10` adds:
+- **GetViewHealth and RegisterViewErrorSink actually report now.** Both methods were present in the
+  API but wired to nothing; a view's health status never left "live" regardless of what happened to
+  its page. They now report load failures, JavaScript errors, DOM-ready timeouts, and an unresponsive
+  renderer.
 
-- `SetViewRole` / `GetViewRole` — tag a view as a panel, HUD widget, or overlay.
-- `GetFocusedView` — ask which view currently has focus.
-- `IsAnyPanelVisible` — one call to check whether any panel-role view is up, so your plugin can
-  decide whether it's safe to open its own panel.
+- **A missing HTML file used to look like a successful load.** A 404 from a bad view path came back
+  as a successful empty page, reached DOM-ready, and reported healthy. It is now correctly flagged as
+  a load failure.
 
-Two things worth knowing when you adopt roles:
+- **CreateView could deadlock the game at startup** if called during kGameDataReady, because it
+  waited on framework init that was itself queued behind the calling plugin on the same thread.
+  Fixed; it brings the backend up on the calling thread when needed.
 
-- **An undeclared view is invisible to `IsAnyPanelVisible`.** `kUnspecified` (the default) is never
-  counted, which is correct — but it means a panel that never calls `SetViewRole` won't be seen by
-  other plugins' checks, and they'll open on top of it. The framework now logs a one-time warning
-  if a view takes focus while still undeclared, so this is easy to catch. **Give any view that
-  takes input a role.**
-- **`SetViewOffscreenSize` is also your per-view performance lever.** On the software render path
-  (Linux/Proton) a view's cost tracks its pixel area, so a mesh-bound view that animates can be
-  rendered smaller and stretched over the same surface to trade a little sharpness for frame time.
+### New API (IVPrismaUI10)
 
-Earlier in 2.0, `IVPrismaUI9` added per-view offscreen backgrounds — what lets a view bound to a
-mesh composite over the geometry properly instead of blacking it out.
+- `SetViewRole` / `GetViewRole` -- tag a view as a panel, HUD widget, or overlay.
+- `GetFocusedView` -- returns which view currently holds focus.
+- `IsAnyPanelVisible` -- one call to check whether any panel-role view is currently visible,
+  so a plugin can decide whether it is safe to open its own panel on top.
 
-New interface versions are always added as a **new** numbered interface; existing ones never
-change, so your plugin won't break when you update.
+Two things to know when adopting roles:
 
-</details>
+An undeclared view is invisible to `IsAnyPanelVisible`. `kUnspecified` (the default) is never
+counted. A panel that never calls `SetViewRole` will not be seen by other plugins' checks and they
+will open on top of it. The framework now logs a one-time warning if a view takes focus while still
+undeclared. Give any view that takes input a role.
 
-<details>
-<summary><strong>🐧 Linux &amp; Proton</strong></summary>
+`SetViewOffscreenSize` doubles as a per-view performance lever on the software render path
+(Linux and Proton). A mesh-bound view rendered at lower resolution and stretched over the same
+surface trades sharpness for frame time. The tradeoff is yours to tune.
 
-- **Views used to come out completely blank under wine and Proton.** Chromium was starting fine and
-  the pages were loading — it just never handed us a frame, because the fast GPU path it uses on
-  Windows has no equivalent there. There's now a software fallback that kicks in automatically, so
-  views actually render.
-- **Fixed a crash a minute or two into play on Proton.** Chromium was quietly starting its own
-  background updater, which tries to use a Windows download service that doesn't really exist there,
-  and it took the game down with it. Those background services are off now — they were never wanted
-  in a game overlay on any platform.
+New interface versions are always added as a new numbered interface. Existing ones never change,
+so a plugin built against V9 keeps working after updating to the V10 header.
 
-Windows is untouched by both of these; same path as before.
+### Linux and Proton
 
-</details>
+- **Views rendered as a solid blank under Wine and Proton.** Chromium was starting and the pages
+  were loading; it just never produced a frame because the GPU path it uses on Windows has no
+  equivalent there. A software fallback now kicks in automatically.
 
-<details>
-<summary><strong>🥽 Fallout 4 VR (preview)</strong></summary>
+- **Fixed a crash one to two minutes into play on Proton.** Chromium was starting a background
+  updater that tried to reach a Windows download service that does not exist under Proton, and it
+  took the game process down with it. Those background services are disabled; they were never
+  appropriate inside a game overlay on any platform.
 
-There's now a separate VR build, `PrismaUI_F4VR.dll`, for Fallout 4 VR 1.2.72 with F4SEVR. Your
-plugin asks for it with `RequestPluginVRAPI` alongside the normal `RequestPluginAPI`, so the base
-V1–V10 API you already use works exactly the same in VR.
+Windows is unaffected by both changes.
 
-What it adds: a view can be placed in the world instead of on a flat screen — head-locked so it
-follows you, a billboard that turns to face you, or a fixed quad you walk up to. Pointing at it
-with a motion controller drives the same mouse events a normal view gets, so existing pages work
-without a rewrite.
+### Fallout 4 VR (preview)
+
+A separate VR build, `PrismaUI_F4VR.dll`, targets Fallout 4 VR 1.2.72 with F4SEVR. Plugins
+request it with `RequestPluginVRAPI` alongside the normal `RequestPluginAPI`, so the V1-V10 API
+you already use works identically in VR.
+
+What the VR build adds: a view can be placed in the world instead of on the flat screen, either
+head-locked, billboard-facing, or as a fixed quad. Pointing at it with a motion controller
+produces the same mouse events a normal view receives, so existing pages work without modification.
 
 > [!WARNING]
-> **Treat this as a preview and don't ship against it yet.** It builds, it links, and the geometry
-> and pointer maths pass their tests, but nobody has run it in a headset yet. A few pieces are
-> knowingly switched off in the VR build — mostly the ones that reach into the flat game's UI, so
-> vanilla menu suppression and 3D model previews aren't there. The API may still move.
+> This is a preview build. It compiles, links, and the geometry and pointer math pass their tests,
+> but it has not been run in a headset. A few subsystems are intentionally disabled in the VR
+> build, mainly those that reach into the flat game's UI, so vanilla menu suppression and 3D model
+> previews are not available. The API may still change.
 
-If you own FO4VR and want to try it, I'd genuinely like the reports.
+### SDK and tooling
 
-</details>
+- **check_api_prefix.py** checks your local copy of `PrismaUI_F4_API.h` against this repo's before
+  you build. The API is called by vtable slot, so a header that is out of sync can silently route a
+  call to the wrong function. Run it with
+  `python3 scripts/check_api_prefix.py path/to/your/PrismaUI_F4_API.h`.
 
-<details>
-<summary><strong>🛠️ SDK &amp; tooling</strong></summary>
+- The header now marks which interfaces are closed. Once an interface has a newer one deriving from
+  it, appending methods would shift every later slot. Closed interfaces are annotated and new methods
+  go into a new interface only.
 
-- **`check_api_prefix.py`** — a small script to check your copy of `PrismaUI_F4_API.h` against this
-  repo's before you build. The API is called by vtable slot, so a header that's out of sync can
-  make a call land on the *wrong function* with no error. Run it and it tells you plainly if a slot
-  would shift. (`python3 scripts/check_api_prefix.py path/to/your/PrismaUI_F4_API.h`)
-- **The header now documents which interfaces are closed.** Once an interface has a newer one
-  deriving from it, appending to it would shift every later slot — so it's marked closed, and new
-  methods only ever go in a new interface.
-- **Fixed a real trap in this repo.** The header the README tells you to copy was stale and stopped
-  at V9, while the copy inside the example plugin had V10. Both are in sync now.
-- Added `PrismaUI_F4VR_API.h` for the VR extension, plus a preview doc.
-- **`prisma-mcp`** shipped — an MCP server so an AI assistant reads the real, current API instead
-  of guessing. There's a one-click bundle for Claude Desktop; if you're building with an assistant,
-  install this first.
-- Licensing cleaned up: proper CEF BSD text included, leftover Ultralight obligations removed (there
-  is no Ultralight in 2.0), and original authorship credited.
+- The header included with the example plugin was ahead of the one listed in the README. Both are
+  now in sync at V10.
 
-</details>
+- Added `PrismaUI_F4VR_API.h` for the VR extension, and a preview doc alongside it.
 
-<details>
-<summary><strong>⚠️ Known issues</strong></summary>
+- **prisma-mcp** ships as a separate package -- an MCP server so an AI assistant can read the
+  current API reference directly rather than guessing from old context. One-click bundle for Claude
+  Desktop is included.
 
-- **Pause may still not work for some people.** At least one report of `pauseGame: true` not pausing
-  on 1.11.221 with nothing else installed. Not reproduced or confirmed yet. Tracked in
+- Licensing: proper CEF BSD text added, leftover Ultralight references removed (there is no
+  Ultralight in 2.0), and original authorship credited.
+
+### Known issues
+
+- **Pause may not work for some users.** At least one report of `pauseGame: true` not pausing on
+  1.11.221 with nothing else installed. Not reproduced yet. Tracked in
   [#1](https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma2.0/issues/1).
-- **Mouse interaction is still fiddly to get right from scratch.** More than one author has hit this.
-  If you're stuck, check
-  [#7](https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma2.0/issues/7) and
+
+- **Mouse interaction is difficult to configure from scratch.** Several plugin authors have hit this.
+  Check [#7](https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma2.0/issues/7) and
   [#2](https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma2.0/issues/2) before starting over.
-- **VR is unverified in a headset**, as above.
-- The gamepad-consume and view-health fixes above are new this update; if a controller or a view's
-  health reporting behaves oddly, open an issue — those paths are freshly changed.
+
+- **VR is unverified in a headset**, as noted above.
+
+- The gamepad-consume and view-health changes are new this release. If either behaves unexpectedly
+  in your setup, open an issue.
+
+</details>
+
+---
+
+<details>
+<summary><strong>2.0 beta (2025, initial public release)</strong></summary>
+
+The initial public release of the 2.0 series. Replaced the Ultralight renderer with CEF 147.
+Rewrote the host-process architecture, introduced the numbered interface versioning model, and
+shipped the initial V1-V9 API surface covering view creation, focus and input management, JS
+interop, offscreen mesh rendering, and the shell page that hosts all views in a single shared
+Chromium browser.
+
+Early point releases in this cycle are not individually documented here.
 
 </details>
