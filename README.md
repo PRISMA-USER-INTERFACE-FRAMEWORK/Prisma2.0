@@ -4,6 +4,11 @@
 [`docs/1.0-vs-2.0.md`](docs/1.0-vs-2.0.md) for what changed from Prisma UI F4 1.0 and its current
 known limitations, and [`CHANGELOG.md`](CHANGELOG.md) for what has landed since.
 
+**On AI:** I use AI tooling to help with boilerplate, the `prisma-mcp` server, and drafting
+comments. I'm a software engineer with five years' experience; the architecture, engine-level work,
+and every review are mine, and nothing here is vibe-coded. See
+[On AI assistance](#on-ai-assistance) for the full breakdown.
+
 **PrismaUI_F4** is an F4SE plugin that embeds **CEF** (Chromium Embedded Framework - a real
 Chromium, currently CEF 147) into Fallout 4. It lets mod authors create fully interactive
 HTML/CSS/JavaScript overlays - menus, HUDs, settings panels, terminals - without touching
@@ -49,7 +54,7 @@ Fallout 4 process
 │           ├── CEF shell browser    ← one shared browser; every view is an iframe inside it
 │           ├── D3D11 Present hook   ← composites the shell's shared texture each frame
 │           ├── FocusMenu            ← Scaleform menu that owns the cursor
-│           └── Public API           ← IVPrismaUI1 .. IVPrismaUI9
+│           └── Public API           ← IVPrismaUI1 .. IVPrismaUI10
 │
 └── YourPlugin.dll                   ← your F4SE plugin
     ├── PrismaUI_F4_API.h            ← single header, copy into your project
