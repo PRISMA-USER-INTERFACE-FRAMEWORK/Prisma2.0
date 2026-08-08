@@ -18,7 +18,7 @@ at runtime via `GetProcAddress`.
 #include "PrismaUI_F4_API.h"
 
 // On kGameDataReady:
-auto* api = PRISMA_UI_API::RequestPluginAPI<PRISMA_UI_API::IVPrismaUI9>();
+auto* api = PRISMA_UI_API::RequestPluginAPI<PRISMA_UI_API::IVPrismaUI10>();
 ```
 
 ---
@@ -102,9 +102,9 @@ requested version, `RequestPluginAPI` returns `nullptr` - handle this gracefully
 > `PrismaUI_F4.dll` build.
 
 ```cpp
-auto* api = PRISMA_UI_API::RequestPluginAPI<PRISMA_UI_API::IVPrismaUI9>();
+auto* api = PRISMA_UI_API::RequestPluginAPI<PRISMA_UI_API::IVPrismaUI10>();
 if (!api) {
-    logger::error("PrismaUI V9 not available - update PrismaUI_F4");
+    logger::error("PrismaUI V10 not available - update PrismaUI_F4");
     return;
 }
 ```
@@ -284,7 +284,7 @@ F4SEPlugin_Load:
   messaging->RegisterListener(F4SEMessageHandler)
 
 kGameDataReady:
-  RequestPluginAPI<IVPrismaUI9>()     -> g_api
+  RequestPluginAPI<IVPrismaUI10>()    -> g_api
   [register key handler / event sink]
 
 kPostLoadGame / kNewGame:

@@ -69,7 +69,7 @@ browser instance. This is invisible to plugin code - `CreateView`/`Show`/`Hide`/
 and friends behave the same. One surface point still no-ops for the CEF backend:
 `GetScrollingPixelSize`/`SetScrollingPixelSize` logs "not yet implemented" and returns 0.
 `SetInspectorBounds` is also a no-op, but deliberately - see the Inspector section of
-[view-lifecycle.md](view-lifecycle.md#inspector). Everything else on the V1-V9 surface, including
+[view-lifecycle.md](view-lifecycle.md#inspector). Everything else on the V1-V10 surface, including
 the on-mesh texture-handoff group (`GetViewSRV`/`SetViewOffscreen`/`BindViewToGeometry`/
 `BindViewToScreenTexture`/`UnbindViewFromGeometry`), is implemented and in active use.
 

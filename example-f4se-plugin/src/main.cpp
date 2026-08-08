@@ -1,5 +1,5 @@
 // example-f4se-plugin/src/main.cpp
-// PrismaUI_F4 integration using NewCommonLib.
+// PrismaUI_F4 example plugin (CommonLibF4, xmake build).
 // F4SE_PLUGIN_LOAD replaces F4SEPlugin_Query/Load pair.
 // F4SE::Init() handles logging; REX:: macros for logging.
 #include "PCH.h"
@@ -8,7 +8,7 @@
 #include "keyhandler/keyhandler.h"
 #include <windows.h>
 
-static PRISMA_UI_API::IVPrismaUI4* g_api  = nullptr;
+static PRISMA_UI_API::IVPrismaUI10* g_api  = nullptr;
 static PrismaView                   g_view = 0;
 static bool                         g_visible = false;
 
@@ -175,6 +175,9 @@ static void CreateViews()
             REX::CRITICAL("CreateViews: failed to create view - PrismaUI_F4 API returned invalid handle");
             return;
         }
+        // Declare this view as an interactive panel so IsAnyPanelVisible() counts it correctly.
+        // Without a role, other plugins cannot detect that this view is on screen.
+        g_api->SetViewRole(g_view, PRISMA_UI_API::ViewRole::kPanel);
         // Views start visible - hide immediately and show explicitly on toggle.
         g_api->Hide(g_view);
     } else {
@@ -205,9 +208,9 @@ static void F4SEMessageHandler(F4SE::MessagingInterface::Message* message)
 
     case F4SE::MessagingInterface::kGameDataReady:
     {
-        g_api = PRISMA_UI_API::RequestPluginAPI<PRISMA_UI_API::IVPrismaUI4>();
+        g_api = PRISMA_UI_API::RequestPluginAPI<PRISMA_UI_API::IVPrismaUI10>();
         if (!g_api) {
-            REX::CRITICAL("PrismaUI_F4 API not found - is PrismaUI_F4.dll installed?");
+            REX::CRITICAL("PrismaUI_F4 V10 not found - update PrismaUI_F4.dll");
             return;
         }
 

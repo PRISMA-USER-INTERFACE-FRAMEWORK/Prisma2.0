@@ -4,7 +4,7 @@
 [`docs/1.0-vs-2.0.md`](docs/1.0-vs-2.0.md) for what changed from Prisma UI F4 1.0 and its current
 known limitations, and [`CHANGELOG.md`](CHANGELOG.md) for what has landed since.
 
-> [!CAUTION]
+> [!NOTE]
 > **On AI:** I use AI tooling to help with boilerplate, the `prisma-mcp` server, and drafting comments. I'm a software engineer with five years' experience; the architecture, engine-level work, and every review are mine, and nothing here is vibe-coded. See [On AI assistance](#on-ai-assistance) for the full breakdown.
 
 
@@ -65,7 +65,7 @@ Fallout 4 process
 1. Copy `PrismaUI_F4_API.h` into your plugin's `src/` folder.
 2. Request the API on `kGameDataReady`:
    ```cpp
-   auto* api = PRISMA_UI_API::RequestPluginAPI<PRISMA_UI_API::IVPrismaUI2>();
+   auto* api = PRISMA_UI_API::RequestPluginAPI<PRISMA_UI_API::IVPrismaUI10>();
    ```
 3. Create a view (starts visible - hide it immediately):
    ```cpp

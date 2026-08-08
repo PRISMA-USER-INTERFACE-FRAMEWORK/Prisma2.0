@@ -251,9 +251,9 @@ using namespace std::literals;
 Your C++ file handles initializing F4SE and loading your UI view when the game is ready.
 
 The example below requests `IVPrismaUI3` - the API is additive and backward-compatible, and V3's
-methods still work unchanged today, but the interface has since grown through `IVPrismaUI9` (on-mesh
-rendering, HUD/menu suppression, controller support, and more). Request the lowest version that has
-the methods you need; see `api-reference.md` for the full current surface.
+methods still work unchanged today, but the interface has since grown through `IVPrismaUI10` (on-mesh
+rendering, HUD/menu suppression, controller support, view roles, and more). Request the lowest version
+that has the methods you need; see `api-reference.md` for the full current surface.
 
 This guide's own key-press-to-toggle needs a hotkey input sink, which is boilerplate you write
 once and reuse - it isn't part of `PrismaUI_F4_API.h` itself. Rather than repeat that boilerplate
