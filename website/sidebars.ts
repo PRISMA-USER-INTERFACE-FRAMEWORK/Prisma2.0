@@ -10,7 +10,6 @@ const sidebars: SidebarsConfig = {
     'limitations',
     '1.0-vs-2.0',
     'papyrus-bridge',
-    'prismamcm',
     'translations',
     'api-reference',
     'changelog',
