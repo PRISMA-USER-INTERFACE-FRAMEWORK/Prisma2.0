@@ -30,7 +30,7 @@ The framework loads views via `file:///` URIs resolved relative to `Data/PrismaU
 
 - **ES2020+**: `const`, `let`, arrow functions, template literals, destructuring, `async/await`, Promises, `class`, optional chaining (`?.`), nullish coalescing (`??`)
 - **DOM API**: Full access to `document`, `window`, `Element`, event listeners, `setTimeout`/`setInterval`, `requestAnimationFrame`
-- **Fetch API**: Available for `file://` resources. Not useful for network requests (game process has no internet access by design).
+- **Fetch API / XHR**: Available for `file://` resources and for a set of whitelisted remote domains (CDNs, YouTube, Nexus Mods, etc.) — see [limitations](limitations.md) for the full list. Arbitrary open-internet requests are blocked.
 - **CSS**: Flexbox, Grid, CSS variables (`--var`), animations (`@keyframes`), transitions, `calc()`, `backdrop-filter`, `clip-path`
 - **Web Storage**: `localStorage` and `sessionStorage` are available but data is scoped to the view's URL. Not persistent across game launches.
 - **JSON**: `JSON.parse` / `JSON.stringify` work normally.
@@ -41,16 +41,12 @@ The framework loads views via `file:///` URIs resolved relative to `Data/PrismaU
 
 | API | Status | Workaround |
 |-----|--------|-----------|
-| `IntersectionObserver` | Not implemented | Guard with `typeof IntersectionObserver !== 'undefined'` |
-| `ResizeObserver` | Not implemented | Use fixed layout or window resize events |
-| `WebGL` / `WebGPU` | Not available | Use D3D11 from C++ side |
-| `Worker` / `SharedWorker` | Not available | Keep processing on main JS thread |
 | `IndexedDB` | Not available | Use `localStorage` or pass data from C++ |
-| `WebSockets` / `XMLHttpRequest` to HTTP | No network | All data comes from C++ via `InteropCall`/`Invoke` |
+| `WebSockets` / `XHR` to unlisted domains | Blocked | Use the [domain whitelist](limitations.md) or pass data from C++ via `InteropCall`/`Invoke` |
 | `dbg()` | Not a thing | Use `console.log()` only |
 | `alert()` / `confirm()` / `prompt()` | Not implemented | Build your own modal in HTML |
 | CSS `@import` | May not resolve | Inline all CSS in `<style>` tags |
-| External fonts via `@font-face url(http...)` | No network | Use system fonts or embed font as base64 |
+| External fonts via `@font-face url(http...)` | Whitelisted domains only | Use system fonts, embed as base64, or host on a whitelisted CDN |
 
 ### Always Guard Optional APIs
 

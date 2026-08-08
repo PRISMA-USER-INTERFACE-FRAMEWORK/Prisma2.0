@@ -13,7 +13,11 @@ A PrismaUI view moves through these states:
      │
      │  DOM parsed and JS executed → onDomReady fires on game thread
      ▼
-[ready + hidden]   ← default state after creation
+[ready + visible]  ← default after creation; call Hide() immediately in most plugins
+     │
+     │  Hide()
+     ▼
+[ready + hidden]
      │
      │  Show()
      ▼
@@ -42,13 +46,13 @@ A PrismaUI view moves through these states:
 
 ```cpp
 PrismaView view = api->CreateView("page.html", OnDomReady);
-// View starts hidden - no Hide() call needed, but explicit is fine:
-// api->Hide(view);
+// views start visible — hide immediately unless you want it on screen at load:
+api->Hide(view);
 ```
 
 `CreateView` is asynchronous - the HTML file is loaded via CEF's own render process. Your `OnDomReady` callback fires on the **main game thread** (via `F4SE::GetTaskInterface()->AddTask`) after the DOM is parsed and all inline `<script>` blocks have executed.
 
-**Do not call `Invoke` or `RegisterJSListener` before `OnDomReady` fires.** The JS context is not yet ready.
+**Do not call `Invoke` before `OnDomReady` fires** — it requires a live JS context. `RegisterJSListener` is C++-side registration only and may safely be called before `OnDomReady`.
 
 **Create views on `kPostLoadGame` / `kNewGame`**, not on `kGameDataReady`:
 
@@ -178,7 +182,7 @@ if (api->HasAnyActiveFocus()) {
 
 ## Multiple Views
 
-Each `CreateView` call produces an independent view with its own CEF browser instance, D3D11 textures, and JS environment. Views do not share state.
+Each `CreateView` call produces an independent iframe inside the shared CEF shell browser, with its own isolated JS environment and D3D11 sub-texture. Views do not share JS state.
 
 **Ordering:** Views are composited in ascending `order` value. Default is 0:
 
@@ -242,6 +246,8 @@ Mouse wheel events are forwarded to the focused view. Scroll amount is tunable p
 ```cpp
 api->SetScrollingPixelSize(view, 40);  // default is 28 px per tick
 ```
+
+> **Note:** `SetScrollingPixelSize` / `GetScrollingPixelSize` are not yet implemented in the CEF backend — both are no-ops that log "not yet implemented". See [limitations](limitations.md).
 
 ---
 
