@@ -8,7 +8,7 @@ sidebar_position: 10
 # Networking
 
 Every PrismaUI view runs inside a **network sandbox**. The sandbox is enforced by two separate
-mechanisms — a JavaScript wrapper script and a CSP meta tag injected into `document.head` — and
+mechanisms, a JavaScript wrapper script and a CSP meta tag injected into `document.head`, and
 applies automatically to every view, without any opt-in required from your plugin.
 
 This page covers what the sandbox blocks, what it allows, how to debug blocked requests, and the
@@ -23,7 +23,7 @@ of your page's JavaScript runs:
 
 | API | Status |
 |-----|--------|
-| `WebSocket` | Removed — `typeof WebSocket === 'undefined'` |
+| `WebSocket` | Removed, `typeof WebSocket === 'undefined'` |
 | `EventSource` | Removed |
 | `Worker` | Removed |
 | `SharedWorker` | Removed |
@@ -54,7 +54,7 @@ These domains cover the most common plugin use-cases: loading a Google Font, emb
 YouTube video, pulling a library from jsDelivr, or making read-only Nexus Mods API calls.
 
 If your plugin needs a domain not on this list, the only supported path is the C++ bridge
-pattern described below — your C++ code makes the request and pushes the result into the view
+pattern described below, your C++ code makes the request and pushes the result into the view
 via `InteropCall`.
 
 ---
@@ -83,8 +83,8 @@ CSP also permits `img-src`, `font-src`, `script-src`, and `style-src` from those
 | `https://` to whitelisted domain | Yes |
 | `http://` (plaintext) | No |
 | `https://` to non-whitelisted domain | No |
-| WebSocket (`ws://`, `wss://`) | No — API removed |
-| Localhost / LAN / private ranges | No — private network guard |
+| WebSocket (`ws://`, `wss://`) | No API removed |
+| Localhost / LAN / private ranges | No, private network guard |
 
 ---
 
@@ -144,7 +144,7 @@ window.__prismaNative = function(event, data) {
 };
 ```
 
-Place this override early in your HTML — before any `fetch()` calls — so the wrapper is in place
+Place this override early in your HTML, before any `fetch()` calls, so the wrapper is in place
 when the sandbox tries to fire it.
 
 ---
@@ -191,7 +191,7 @@ window.onData = function(json) {
 };
 ```
 
-`InteropCall` calls `window.<fnName>(arg)` — the function must exist on `window` by the time the
+`InteropCall` calls `window.<fnName>(arg)`, the function must exist on `window` by the time the
 call arrives. Register it during page initialisation, not lazily.
 
 ---
@@ -224,7 +224,7 @@ static void PollThread()
         std::string response = HttpGet("https://nexusmods.com/api/v1/your-endpoint");
 
         if (!response.empty()) {
-            // Must NOT call PrismaUI APIs here — wrong thread
+            // Must NOT call PrismaUI APIs here, wrong thread
             F4SE::GetTaskInterface()->AddTask([response]() {
                 if (g_view && g_api && g_api->IsValid(g_view)) {
                     g_api->InteropCall(g_view, "onPollResult", response.c_str());
@@ -251,7 +251,7 @@ static void OnMessage(F4SE::MessagingInterface::Message* msg)
     case F4SE::MessagingInterface::kNewGame:
         if (g_view == 0 && g_api) {
             g_view = g_api->CreateView("Interface/MyPlugin/main.html", [](PrismaView view) {
-                // DOM ready — register the native callback for debugging
+                // DOM ready, register the native callback for debugging
                 g_api->RegisterJSListener(view, "__prismaNative", [](const char* payload) {
                     std::string s(payload);
                     if (s.rfind("networkBlocked:", 0) == 0) {
@@ -304,7 +304,7 @@ function renderResults(data) {
 
 ### Key points
 
-- `HttpGet` runs on a dedicated thread — never block the game thread for network I/O.
+- `HttpGet` runs on a dedicated thread, never block the game thread for network I/O.
 - Always check `g_api->IsValid(g_view)` inside the `AddTask` lambda; the view may have been
   destroyed between the time the task was queued and when it runs.
 - Stop the polling thread in your plugin's cleanup path (game unload / process exit) by clearing
@@ -318,7 +318,7 @@ function renderResults(data) {
 
 - The sandbox blocks WebSocket, EventSource, Worker, SharedWorker, and `sendBeacon` by removing
   their globals before your JS runs.
-- `fetch()` and XHR are wrapped — only `prisma:` same-origin and whitelisted `https://` domains
+- `fetch()` and XHR are wrapped, only `prisma:` same-origin and whitelisted `https://` domains
   are permitted.
 - Private/local IP ranges are blocked separately as a guard against SSRF via plugin UI.
 - When a request is blocked the framework fires `window.__prismaNative('networkBlocked', ...)`,

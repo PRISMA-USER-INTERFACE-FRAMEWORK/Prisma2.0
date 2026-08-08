@@ -16,7 +16,7 @@ Prerequisites:
 
 ---
 
-## Step 1 — Copy the API header
+## Step 1 Copy the API header
 
 PrismaUI has **no link-time dependency**. There is nothing to add to your `xmake.lua` or `CMakeLists.txt`. The entire integration surface is one header you drop into your project.
 
@@ -37,7 +37,7 @@ That's it. No linker flags. No additional libraries. The header resolves the API
 
 ---
 
-## Step 2 — Request the API
+## Step 2 Request the API
 
 Declare two globals at the top of your main `.cpp`:
 
@@ -56,7 +56,7 @@ static void F4SEMessageHandler(F4SE::MessagingInterface::Message* msg)
     case F4SE::MessagingInterface::kGameDataReady:
         g_api = PRISMA_UI_API::RequestPluginAPI<PRISMA_UI_API::IVPrismaUI2>();
         if (!g_api) {
-            REX::CRITICAL("PrismaUI_F4 not found — is it installed and active in MO2?");
+            REX::CRITICAL("PrismaUI_F4 not found, is it installed and active in MO2?");
         }
         break;
 
@@ -66,11 +66,11 @@ static void F4SEMessageHandler(F4SE::MessagingInterface::Message* msg)
 ```
 
 **Why `kGameDataReady` and not `F4SEPlugin_Load`?**
-PrismaUI_F4.dll may not be loaded yet when `F4SEPlugin_Load` runs — F4SE loads plugins in an undefined order. By `kGameDataReady`, all F4SE plugins are fully initialised and `GetModuleHandleW("PrismaUI_F4.dll")` is guaranteed to succeed. Calling `RequestPluginAPI` earlier returns null every time.
+PrismaUI_F4.dll may not be loaded yet when `F4SEPlugin_Load` runs F4SE loads plugins in an undefined order. By `kGameDataReady`, all F4SE plugins are fully initialised and `GetModuleHandleW("PrismaUI_F4.dll")` is guaranteed to succeed. Calling `RequestPluginAPI` earlier returns null every time.
 
 ---
 
-## Step 3 — Create the view
+## Step 3 Create the view
 
 Add handlers for `kPostLoadGame` and `kNewGame` in the same message handler. Create the view there, register your close listener inside `OnDomReady`, then hide the view immediately:
 
@@ -80,14 +80,14 @@ Add handlers for `kPostLoadGame` and `kNewGame` in the same message handler. Cre
         if (g_api && (g_view == 0 || !g_api->IsValid(g_view))) {
             g_view = g_api->CreateView("Interface/MyMod/hello.html",
                 [](PrismaView v) {
-                    // OnDomReady — the HTML is loaded and JS is running.
+                    // OnDomReady, the HTML is loaded and JS is running.
                     // Register listeners HERE, not before.
                     g_api->RegisterJSListener(v, "close", [](const char*) {
                         g_api->Unfocus(g_view);
                         g_api->Hide(g_view);
                     });
                 });
-            g_api->Hide(g_view);  // Views start visible — hide immediately.
+            g_api->Hide(g_view);  // Views start visible, hide immediately.
         }
         break;
 ```
@@ -95,12 +95,12 @@ Add handlers for `kPostLoadGame` and `kNewGame` in the same message handler. Cre
 Key points:
 - **`RegisterJSListener` must be called inside `OnDomReady`**, not before it. The DOM doesn't exist yet before that callback fires.
 - The `"close"` string is the JS function name. Your HTML will call `window.close()` to trigger it.
-- `Hide` after `CreateView` is not optional — views are visible by default, so if you skip this your panel will flash on screen every time a save loads.
+- `Hide` after `CreateView` is not optional, views are visible by default, so if you skip this your panel will flash on screen every time a save loads.
 - The `g_view == 0 || !g_api->IsValid(g_view)` guard prevents creating a second view if the player loads another save in the same session.
 
 ---
 
-## Step 4 — Toggle it open with F6
+## Step 4 Toggle it open with F6
 
 Add a toggle function and wire it to F6. The cleanest approach is the `BSInputEventUser` pattern from the example plugin (copy `keyhandler/` from `example-f4se-plugin/src/` if you want the full helper), but a direct approach also works. Here is the toggle function:
 
@@ -138,7 +138,7 @@ Wire it to F6 in `kGameDataReady` using the `KeyHandler` from the example plugin
 
 ---
 
-## Step 5 — The HTML file
+## Step 5 The HTML file
 
 Create this file at:
 
@@ -205,11 +205,11 @@ Data/PrismaUI_F4/views/Interface/MyMod/hello.html
 </html>
 ```
 
-`window.close()` calls the JS listener you registered in Step 3. No external scripts, no CDN fonts — everything is inline so it loads instantly.
+`window.close()` calls the JS listener you registered in Step 3. No external scripts, no CDN fonts, everything is inline so it loads instantly.
 
 ---
 
-## Step 6 — Deploy and test
+## Step 6 Deploy and test
 
 1. **Copy the HTML** to your MO2 mod folder for your plugin:
 

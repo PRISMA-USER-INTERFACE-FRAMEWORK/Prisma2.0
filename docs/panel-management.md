@@ -18,7 +18,7 @@ Every view has a role that tells the framework what kind of UI it is.
 
 ```cpp
 enum class ViewRole : uint32_t {
-    kUnspecified = 0,  // default — never counted as an interactive panel
+    kUnspecified = 0,  // default, never counted as an interactive panel
     kWidget = 1,       // passive always-on overlay (HUD element); never blocks anything
     kPanel = 2,        // interactive panel that occupies the screen and takes input
 };
@@ -26,9 +26,9 @@ enum class ViewRole : uint32_t {
 
 | Role | Use for | Counts as "in the way"? |
 |------|---------|------------------------|
-| `kUnspecified` | Anything you haven't declared yet | No — never |
-| `kWidget` | HUD overlays, compass, health bars | No — passive by definition |
-| `kPanel` | Inventory, crafting, terminal, MCM | Yes — if visible or focused |
+| `kUnspecified` | Anything you haven't declared yet | No, never |
+| `kWidget` | HUD overlays, compass, health bars | No, passive by definition |
+| `kPanel` | Inventory, crafting, terminal, MCM | Yes, if visible or focused |
 
 **Declare a role on any view that takes input.** A view that calls `Focus()` without a declared role
 logs a one-time warning and is invisible to every other plugin's `IsAnyPanelVisible` check.
@@ -59,7 +59,7 @@ Returns `true` if any view **other than `ignoreView`** is currently focused or i
 and not hidden. Passive `kWidget` views and undeclared views never contribute.
 
 ```cpp
-// Before opening your panel — don't open over another mod's panel.
+// Before opening your panel, don't open over another mod's panel.
 if (g_api->IsAnyPanelVisible(g_view)) {
     return;  // another interactive panel is already up
 }
@@ -106,17 +106,17 @@ g_api = PRISMA_UI_API::RequestPluginAPI<PRISMA_UI_API::IVPrismaUI10>();
 if (g_api && g_view == 0) {
     g_view = g_api->CreateView("Interface/MyMod/panel.html", OnDomReady);
     g_api->SetViewRole(g_view, PRISMA_UI_API::ViewRole::kPanel);
-    g_api->SetViewOwnsEscape(g_view, true);   // V9 — Escape handled in JS
+    g_api->SetViewOwnsEscape(g_view, true);   // V9 Escape handled in JS
     g_api->Hide(g_view);
 }
 
-// Hotkey / game event — open the panel
+// Hotkey / game event, open the panel
 void OpenPanel() {
     if (!g_api || !g_api->IsValid(g_view)) return;
 
     // Yield to any other plugin that's already showing a panel.
     if (g_api->IsAnyPanelVisible(g_view)) {
-        logger::info("deferring — another panel is visible");
+        logger::info("deferring, another panel is visible");
         return;
     }
 
@@ -137,7 +137,7 @@ void OnClose(const char*) {
 
 `EnumerateViews` reports every view, including passive HUD widgets that are always on screen. A
 naive "is any view visible and not hidden?" check would return `true` permanently on any setup
-running a HUD mod — making `IsAnyPanelVisible` useless. Declaring `kWidget` or `kPanel` is the
+running a HUD mod, making `IsAnyPanelVisible` useless. Declaring `kWidget` or `kPanel` is the
 opt-in that lets the framework distinguish "overlay that lives in the background" from "menu that
 blocks the player."
 

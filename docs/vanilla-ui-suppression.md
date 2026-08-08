@@ -19,18 +19,18 @@ There are three distinct operations and they are not interchangeable:
 
 | Method | What it does | Menu fires events? | Persistent? |
 |---|---|---|---|
-| `SuppressVanillaMenu` | Hides the Scaleform movie | Yes | Yes — survives close/reopen |
-| `CloseVanillaMenu` | Sends `kHide` — actually closes the menu | Yes (close event fires) | No |
+| `SuppressVanillaMenu` | Hides the Scaleform movie | Yes | Yes, survives close/reopen |
+| `CloseVanillaMenu` | Sends `kHide`, actually closes the menu | Yes (close event fires) | No |
 | `SuppressVanillaMenuIf` | Registers a predicate; if it returns true when the menu opens, force-closes it | Yes (open event fires, then close fires) | While predicate is registered |
 
 **Suppress** means the Scaleform movie is invisible but the menu is still technically open. The
 game still fires `MenuOpenCloseEvent` for both the open and close transitions. Code that listens
-to those events — including other framework internals, like the Prisma Dock — continues to work.
+to those events, including other framework internals, like the Prisma Dock, continues to work.
 Use `IsMenuSuppressed` in your own `MenuOpenCloseEvent` listener to skip logic that should only
 run when the vanilla UI is actually visible.
 
 **Close** discards the menu from the menu stack. Use it when you need the menu gone immediately
-rather than hidden — for example, to ensure vanilla ContainerMenu is not consuming input while your
+rather than hidden, for example, to ensure vanilla ContainerMenu is not consuming input while your
 replacement is open.
 
 **SuppressIf** is for conditional suppression. The predicate is called on every open; return
@@ -40,7 +40,7 @@ your plugin's examine view is already visible).
 
 ```cpp
 // Permanently hide PipboyMenu while your plugin is active.
-// The menu events still fire — you can listen to them to show/hide your own view.
+// The menu events still fire, you can listen to them to show/hide your own view.
 g_api->SuppressVanillaMenu("PipboyMenu", true);
 
 // Undo suppression (e.g. on plugin unload or game exit):
@@ -67,18 +67,18 @@ static or free function, or a captureless lambda.
 
 ## Discovering vanilla menu names
 
-Menu names are not documented in any fixed list — they are runtime Scaleform strings that vary by
+Menu names are not documented in any fixed list, they are runtime Scaleform strings that vary by
 game version and installed mods. The framework logs each menu name the first time it opens in a
 session:
 
 ```
-[PrismaUI] VanillaMenuSink: first open — 'ContainerMenu'
-[PrismaUI] VanillaMenuSink: first open — 'ExamineConfirmMenu'
+[PrismaUI] VanillaMenuSink: first open, 'ContainerMenu'
+[PrismaUI] VanillaMenuSink: first open, 'ExamineConfirmMenu'
 ```
 
 Run the game with the plugin active, open the vanilla menus you want to replace, then check the
 F4SE log (or PrismaUI's own log) to collect the exact strings. Pass those strings verbatim to
-`SuppressVanillaMenu` and friends — the comparison is case-sensitive.
+`SuppressVanillaMenu` and friends, the comparison is case-sensitive.
 
 ---
 
@@ -131,7 +131,7 @@ g_api->SuppressHUDWidget("HUDCrosshair", false);
 
 When the player aims at a container or NPC, the game shows a button strip like
 `E) Take  Q) Field Dress  ...`. The activate-choice filter intercepts that strip so your plugin
-can read each button label and fire individual choices programmatically — without the vanilla UI
+can read each button label and fire individual choices programmatically, without the vanilla UI
 appearing.
 
 **OG runtime only.** On NG/AE these methods log a warning and return without doing anything.
@@ -149,11 +149,11 @@ virtual bool GetActivateChoiceLabel(uint32_t buttonIndex, char* outBuffer, size_
 virtual bool TriggerActivateChoice(uint32_t buttonIndex) noexcept = 0;
 ```
 
-### Example — replacing "E) Field Dress" with a custom UI
+### Example, replacing "E) Field Dress" with a custom UI
 
 The plugin wants to show its own skinning/harvesting screen instead of the vanilla field-dress
 prompt. It enables the filter so the game's activate strip is hidden, reads the available choices
-when the player presses the activation key, and — if one of them is a field-dress action — opens
+when the player presses the activation key, and, if one of them is a field-dress action, opens
 the custom view instead of triggering it directly.
 
 ```cpp
@@ -168,7 +168,7 @@ static void OnActivationKeyDown()
         if (!g_api->GetActivateChoiceLabel(i, label, sizeof(label)))
             break;
 
-        // "Field Dress" is localised — match against your translated string or a known prefix
+        // "Field Dress" is localised, match against your translated string or a known prefix
         if (std::string_view(label).starts_with("Field Dress")) {
             // Show your custom skinning view instead
             g_api->Show(g_skinningView);
@@ -178,11 +178,11 @@ static void OnActivationKeyDown()
         }
     }
 
-    // No match — fall through to default "Take" (button index 0)
+    // No match, fall through to default "Take" (button index 0)
     g_api->TriggerActivateChoice(0);
 }
 
-// Inside your skinning view's "onConfirm" JS listener — fires when the player confirms:
+// Inside your skinning view's "onConfirm" JS listener, fires when the player confirms:
 static void OnSkinningConfirm(const char*)
 {
     g_api->Unfocus(g_skinningView);
@@ -240,7 +240,7 @@ static void OnF4SEMessage(F4SE::MessagingInterface::Message* msg)
         // Suppress the vanilla ContainerMenu entirely
         g_api->SuppressVanillaMenu("ContainerMenu", true);
 
-        // Suppress specific HUD widgets (OG only — safe to call on NG, just no-ops)
+        // Suppress specific HUD widgets (OG only, safe to call on NG, just no-ops)
         g_api->SuppressHUDWidget("HUDCompass", true);
         g_api->SuppressHUDWidget("HUDStealthMeter", true);
         g_api->SuppressHUDWidget("HUDExperienceMeter", true);
@@ -257,7 +257,7 @@ public:
         RE::BSTEventSource<RE::MenuOpenCloseEvent>*) override
     {
         if (evt.menuName == "ContainerMenu" && evt.opening) {
-            // Vanilla menu opened but is suppressed — show our view instead
+            // Vanilla menu opened but is suppressed, show our view instead
             if (!g_containerOpen && g_api && g_containerView != 0
                 && g_api->IsMenuSuppressed("ContainerMenu"))
             {
@@ -287,8 +287,8 @@ extern "C" __declspec(dllexport) bool F4SEPlugin_Load(const F4SE::LoadInterface*
 ## Caveats
 
 **Events still fire after suppression.** `SuppressVanillaMenu` hides the movie; it does not
-prevent `MenuOpenCloseEvent` from being dispatched. If any other code — vanilla, another F4SE
-plugin, or framework internals — listens to that event and takes action based on it, they will
+prevent `MenuOpenCloseEvent` from being dispatched. If any other code, vanilla, another F4SE
+plugin, or framework internals, listens to that event and takes action based on it, they will
 still receive it. Design your `MenuOpenCloseEvent` sink accordingly: check
 `IsMenuSuppressed` before assuming the vanilla UI is visible.
 
@@ -300,7 +300,7 @@ the no-op on NG.
 
 **SuppressVanillaMenu is not a lock.** Nothing prevents the game from opening the menu again
 after you call `SuppressVanillaMenu`. The suppression persists for the lifetime of the setting, so
-future opens are also hidden — but other code can call `SuppressVanillaMenu(name, false)` and undo
+future opens are also hidden, but other code can call `SuppressVanillaMenu(name, false)` and undo
 your suppression. Coordinate between plugins if multiple consumers might be toggling the same menu.
 
 **CloseVanillaMenu fires the close event.** Your `MenuOpenCloseEvent` sink will receive an
