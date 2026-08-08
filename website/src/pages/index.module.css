@@ -265,6 +265,13 @@
   }
 }
 
+.archExampleNote {
+  margin: 20px 0 0;
+  font-size: 0.875rem;
+  color: var(--ifm-color-content-secondary);
+  text-align: center;
+}
+
 /* ── features ───────────────────────────────────────────────── */
 .features {
   padding: 80px 0;
