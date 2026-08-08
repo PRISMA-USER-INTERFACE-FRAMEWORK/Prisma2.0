@@ -323,6 +323,10 @@ namespace PRISMA_UI_API {
     //   element.innerHTML = window.PrismaCG.chip("A", isPlayStation);                // a known button
     // A prompt token is either plain keyboard text ("E", "Space") or "gp:<canonical>" for a gamepad
     // button; renderKey handles both. isPlayStation comes from GetControllerStyle()==1.
+    // Closed: IVPrismaUI10 derives from this, so anything appended here would shift every V10 slot
+    // for a plugin still built against the old header, and it calls the wrong function with no
+    // warning. New methods go in a new interface. Once an interface has a subclass it is closed.
+    // check_api_prefix.py verifies a header copy against this one.
     class IVPrismaUI9 : public IVPrismaUI8 {
     protected:
         ~IVPrismaUI9() = default;
@@ -398,7 +402,10 @@ namespace PRISMA_UI_API {
         ~IVPrismaUI10() = default;
 
     public:
-        // Declare what this view is. Defaults to kUnspecified, which never blocks anything.
+        // Declare what this view is. Defaults to kUnspecified, which never blocks anything -- but an
+        // undeclared view is not counted by IsAnyPanelVisible either, so give any view that takes
+        // input a role or other plugins will open on top of it. A view that takes focus while still
+        // kUnspecified gets one warning line in PrismaUI_F4.log.
         virtual void SetViewRole(PrismaView view, ViewRole role) noexcept = 0;
         virtual ViewRole GetViewRole(PrismaView view) noexcept = 0;
 
