@@ -129,6 +129,25 @@ To build and deploy the example plugin:
 - C++23 compiler (MSVC 2022 recommended)
 - xmake 3.0+
 
+## On AI assistance
+
+I use AI tooling while building Prisma, and I'd rather state that plainly than have anyone guess.
+Concretely, it helps with three things:
+
+- **Boilerplate.** F4SE plugin scaffolding, repetitive binding code, the parts that look the same
+  in every plugin. AI drafts a first pass; I review and correct it.
+- **prisma-mcp.** The MCP server in this repo exists precisely so an assistant works from the real,
+  current API instead of guessing at it. I built it because I use assistants myself and wanted them
+  accurate.
+- **Comments.** Turning a mechanism I already understand into a readable comment block is tedious
+  work; AI drafts them and I fix anything that's wrong.
+
+What AI does not do is design the architecture, make the engine-level calls, or ship unreviewed.
+I'm a software engineer with five years' experience and everything here goes through me: the CEF
+integration, the D3D11 Present hook, the input routing, and the vtable-versioned API were designed
+and debugged by someone who understands them. Nothing in this framework is vibe-coded. AI speeds up
+the typing; it does not stand in for knowing what the code does or why.
+
 ## Credits and License
 
 This project is a Fallout 4 (F4SE) conversion of the original **Prisma UI** framework by
