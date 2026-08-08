@@ -91,12 +91,12 @@ export default function AiToolbar(): JSX.Element {
 
   const copyLabel =
     copyState === 'loading'
-      ? '…'
+      ? 'Copying…'
       : copyState === 'done'
-        ? '✓ Copied'
+        ? 'Copied'
         : copyState === 'error'
-          ? '✗ Failed'
-          : '📋 Copy as Markdown';
+          ? 'Failed'
+          : 'Copy as Markdown';
 
   return (
     <>
@@ -110,7 +110,7 @@ export default function AiToolbar(): JSX.Element {
           {copyLabel}
         </button>
         <button className={styles.btn} onClick={() => setModalOpen(true)} title="AI Tools">
-          🤖 AI Tools
+          AI Tools
         </button>
       </div>
 

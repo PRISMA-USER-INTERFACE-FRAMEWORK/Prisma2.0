@@ -1,17 +1,15 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import Layout from '@theme/Layout';
 import CodeBlock from '@theme/CodeBlock';
 import styles from './index.module.css';
 
-const QUICK_START = `// 1. Request the API on kGameDataReady
+const QUICK_START = `// 1. request the api on kGameDataReady
 auto* api = PRISMA_UI_API::RequestPluginAPI<IVPrismaUI2>();
 
-// 2. Create a view on kPostLoadGame / kNewGame
+// 2. create a view on kPostLoadGame / kNewGame
 PrismaView view = api->CreateView("my-ui.html", [](PrismaView v) {
-    // DOM is ready — safe to register JS listeners and invoke
     api->RegisterJSListener(v, "close", [](const char*) {
         api->Unfocus(view);
         api->Hide(view);
@@ -22,43 +20,54 @@ api->Hide(view);   // views start visible — hide until the player opens yours`
 
 const FEATURES = [
   {
-    icon: '🌐',
-    title: 'Real Chromium',
-    body: 'CEF 147 — the same engine that powers VS Code. Full ES2020+, WebGL, CSS Grid, Web Audio, Web Workers. No proprietary renderer quirks.',
+    label: 'Real Chromium',
+    title: 'CEF 147',
+    body: 'The same engine that powers VS Code. Full ES2020+, WebGL, CSS Grid, Web Audio, and Web Workers — no proprietary renderer quirks.',
   },
   {
-    icon: '🎮',
-    title: 'F4SE native',
-    body: 'Deep integration via F4SE messaging. JS listeners run on the main game thread. Direct RE::Actor / GMST / Papyrus property access inside callbacks.',
+    label: 'F4SE Native',
+    title: 'Deep integration',
+    body: 'JS listeners run on the main game thread. Direct access to RE::Actor, GMSTs, and Papyrus properties from inside callbacks.',
   },
   {
-    icon: '⚙️',
-    title: 'Framework-free',
-    body: 'Vanilla JS, React, Vue, Svelte — if it ships as HTML/CSS/JS, it runs inside the game. No special build pipeline required.',
+    label: 'Framework Agnostic',
+    title: 'Any web stack',
+    body: 'Vanilla JS, React, Vue, Svelte — if it ships as HTML, CSS, and JS, it runs inside the game. No special build pipeline required.',
   },
   {
-    icon: '🤖',
-    title: 'AI-ready',
-    body: 'prisma-mcp is an MCP server that gives Cursor, Claude Code, and any MCP-compatible AI live access to the full API reference and guides.',
+    label: 'AI-Ready',
+    title: 'prisma-mcp',
+    body: 'An MCP server that gives Cursor, Claude Code, and any MCP-compatible AI live, structured access to every method and guide.',
   },
 ];
 
 export default function Home(): JSX.Element {
-  const { siteConfig } = useDocusaurusContext();
+  const gettingStartedUrl = useBaseUrl('/docs/getting-started');
+  const apiReferenceUrl = useBaseUrl('/docs/api-reference');
+  const logoUrl = useBaseUrl('/img/prisma-logo.png');
 
   return (
-    <Layout title={siteConfig.title} description={siteConfig.tagline}>
-      {/* ── hero ── */}
+    <Layout
+      title="PrismaUI F4 — HTML/JS UI framework for Fallout 4"
+      description="Render any HTML, CSS, and JavaScript interface inside Fallout 4 using Chromium (CEF 147). Deep F4SE integration. Supports React, Vue, Svelte, and vanilla JS."
+    >
+      {/* hero */}
       <header className={styles.hero}>
         <div className={styles.heroInner}>
-          <span className={styles.badge}>CEF 147 · F4SE · Fallout 4</span>
-          <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
-          <p className={styles.heroTagline}>{siteConfig.tagline}</p>
+          <img src={logoUrl} alt="PrismaUI F4" className={styles.heroLogo} />
+          <h1 className={styles.heroTitle}>PrismaUI F4</h1>
+          <p className={styles.heroTagline}>
+            HTML, CSS, and JavaScript UI framework for Fallout 4
+          </p>
+          <p className={styles.heroSub}>
+            Powered by CEF 147 — real Chromium, the same engine as VS Code.
+            Deep F4SE integration. Supports any web framework.
+          </p>
           <div className={styles.heroCta}>
-            <Link className={styles.ctaPrimary} to={useBaseUrl('/docs/getting-started')}>
-              Get started →
+            <Link className={styles.ctaPrimary} to={gettingStartedUrl}>
+              Get started
             </Link>
-            <Link className={styles.ctaSecondary} to={useBaseUrl('/docs/api-reference')}>
+            <Link className={styles.ctaSecondary} to={apiReferenceUrl}>
               API reference
             </Link>
           </div>
@@ -66,13 +75,13 @@ export default function Home(): JSX.Element {
       </header>
 
       <main>
-        {/* ── features ── */}
+        {/* features */}
         <section className={styles.features}>
           <div className={styles.container}>
             <div className={styles.featureGrid}>
               {FEATURES.map((f) => (
-                <div key={f.title} className={styles.featureCard}>
-                  <span className={styles.featureIcon}>{f.icon}</span>
+                <div key={f.label} className={styles.featureCard}>
+                  <span className={styles.featureLabel}>{f.label}</span>
                   <h3 className={styles.featureTitle}>{f.title}</h3>
                   <p className={styles.featureDesc}>{f.body}</p>
                 </div>
@@ -81,42 +90,42 @@ export default function Home(): JSX.Element {
           </div>
         </section>
 
-        {/* ── quick start ── */}
+        {/* quick start */}
         <section className={styles.quickStart}>
           <div className={styles.container}>
-            <h2 className={styles.sectionTitle}>Quick start</h2>
+            <h2 className={styles.sectionTitle}>Five minutes to a working UI</h2>
             <p className={styles.sectionSub}>
-              One header file. No link-time dependency on the framework DLL. Works in any xmake
-              F4SE plugin.
+              One header file. No link-time dependency on the framework DLL.
+              Works in any xmake F4SE plugin.
             </p>
             <CodeBlock language="cpp">{QUICK_START}</CodeBlock>
-            <Link className={styles.sectionLink} to={useBaseUrl('/docs/getting-started')}>
+            <Link className={styles.sectionLink} to={gettingStartedUrl}>
               Full walkthrough, from scratch →
             </Link>
           </div>
         </section>
 
-        {/* ── AI / MCP ── */}
-        <section className={styles.aiSection}>
+        {/* MCP */}
+        <section className={styles.mcpSection}>
           <div className={styles.container}>
-            <div className={styles.aiCard}>
-              <div>
-                <h2 className={styles.aiTitle}>🤖 Connect your AI assistant</h2>
-                <p className={styles.aiDesc}>
-                  <code>prisma-mcp</code> is a Model Context Protocol server that gives Cursor,
-                  Claude Code, or any MCP-compatible AI live, structured access to every method in
-                  this API reference plus all guides — always up to date, no copy-paste needed.
+            <div className={styles.mcpCard}>
+              <div className={styles.mcpText}>
+                <h2 className={styles.mcpTitle}>Connect your AI assistant</h2>
+                <p className={styles.mcpDesc}>
+                  <code>prisma-mcp</code> is a Model Context Protocol server that gives
+                  Cursor, Claude Code, and any MCP-compatible AI live, structured access
+                  to the full API reference and all guides — always up to date.
                 </p>
-                <div className={styles.aiCta}>
-                  <Link className={styles.ctaPrimary} to={useBaseUrl('/docs/getting-started')}>
-                    Get started →
+                <div className={styles.mcpActions}>
+                  <Link className={styles.ctaPrimary} to={gettingStartedUrl}>
+                    Get started
                   </Link>
-                  <Link className={styles.ctaSecondary} to={useBaseUrl('/docs/api-reference')}>
+                  <Link className={styles.ctaSecondary} to={apiReferenceUrl}>
                     Browse the API
                   </Link>
                 </div>
               </div>
-              <div>
+              <div className={styles.mcpCode}>
                 <CodeBlock language="bash">{'claude mcp add prisma-mcp -- npx -y prisma-mcp'}</CodeBlock>
                 <CodeBlock language="json">{JSON.stringify(
                   { mcpServers: { 'prisma-mcp': { command: 'npx', args: ['-y', 'prisma-mcp'] } } },

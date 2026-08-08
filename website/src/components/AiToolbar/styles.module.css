@@ -1,11 +1,8 @@
 /* ── toolbar strip ──────────────────────────────────────────── */
 .toolbar {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
-  padding: 16px 0 8px;
-  border-top: 1px solid var(--ifm-color-emphasis-200);
-  margin-top: 24px;
   flex-wrap: wrap;
 }
 
