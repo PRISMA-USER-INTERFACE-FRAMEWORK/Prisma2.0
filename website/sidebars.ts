@@ -15,6 +15,7 @@ const sidebars: SidebarsConfig = {
     'model-preview',
     'view-watchdog',
     'networking',
+    'panel-management',
     'api-reference',
     'changelog',
   ],

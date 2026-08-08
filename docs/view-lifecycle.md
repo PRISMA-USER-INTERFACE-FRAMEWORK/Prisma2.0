@@ -169,6 +169,29 @@ document.addEventListener('keydown', e => {
 });
 ```
 
+### `SetViewOwnsEscape` (V9)
+
+By default, Escape is **not** forwarded to the view's JS while it is focused. The key reaches the game and toggles the vanilla PauseMenu instead.
+
+Call `SetViewOwnsEscape(view, true)` to intercept Escape before the game ever sees it. The key is delivered to the HTML `keydown` handler and swallowed:
+
+```cpp
+// Call once after CreateView, before the first Focus.
+g_api->SetViewOwnsEscape(g_view, true);
+```
+
+```javascript
+// Handle it in JS:
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        e.preventDefault();
+        window.onClose(); // call your C++ listener to unfocus/hide
+    }
+});
+```
+
+Only enable this on a view that actively handles Escape. If the view ignores the key, the player has no way to dismiss the focused UI — Escape no longer opens the PauseMenu as a fallback.
+
 ### `HasAnyActiveFocus`
 
 ```cpp
