@@ -82,7 +82,7 @@ console.warn('warning');        // appears as [JS WARN]
 console.error('error');         // appears as [JS ERR]
 ```
 
-These only appear in your F4SE log if you registered a `ConsoleMessageCallback` from C++. See the [API Reference](api-reference.md#registerconsolecallback).
+These only appear in your F4SE log if you registered a `ConsoleMessageCallback` from C++. See [`RegisterConsoleCallback`](api/RegisterConsoleCallback.md).
 
 ---
 
@@ -120,7 +120,7 @@ Register a listener from C++ (do this inside your `OnDomReady` callback):
 > **Threading:** `JSListenerCallback` is dispatched onto the **main game thread** - the framework
 > wraps every `RegisterJSListener` callback in its own `F4SE::GetTaskInterface()->AddTask` before
 > your code runs, so `RE::*` access inside a listener is safe without you dispatching manually. See
-> [api-reference.md - Threading Warning](api-reference.md#threading-warning-js-listener-callbacks)
+> [API Reference — Threading](api-reference.md#threading)
 > for the full explanation.
 
 ```cpp
