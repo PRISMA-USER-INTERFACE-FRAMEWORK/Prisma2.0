@@ -4,10 +4,7 @@
 [`docs/1.0-vs-2.0.md`](docs/1.0-vs-2.0.md) for what changed from Prisma UI F4 1.0 and its current
 known limitations, and [`CHANGELOG.md`](CHANGELOG.md) for what has landed since.
 
-**On AI:** I use AI tooling to help with boilerplate, the `prisma-mcp` server, and drafting
-comments. I'm a software engineer with five years' experience; the architecture, engine-level work,
-and every review are mine, and nothing here is vibe-coded. See
-[On AI assistance](#on-ai-assistance) for the full breakdown.
+<mark><strong>On AI:</strong> I use AI tooling to help with boilerplate, the <code>prisma-mcp</code> server, and drafting comments. I'm a software engineer with five years' experience; the architecture, engine-level work, and every review are mine, and nothing here is vibe-coded. See <a href="#on-ai-assistance">On AI assistance</a> for the full breakdown.</mark>
 
 **PrismaUI_F4** is an F4SE plugin that embeds **CEF** (Chromium Embedded Framework - a real
 Chromium, currently CEF 147) into Fallout 4. It lets mod authors create fully interactive
