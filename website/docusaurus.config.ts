@@ -43,6 +43,8 @@ const config: Config = {
         docsRouteBasePath: '/docs',
       },
     ],
+    './plugins/source-docs',
+    './plugins/llms-txt',
   ],
 
   themeConfig: {

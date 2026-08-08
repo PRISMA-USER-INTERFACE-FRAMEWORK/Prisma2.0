@@ -1,4 +1,6 @@
 :root {
+  --hero-glow: rgba(13, 148, 136, 0.18);
+  --hero-glow-card: rgba(13, 148, 136, 0.05);
   --ifm-color-primary: #0d9488;
   --ifm-color-primary-dark: #0b807a;
   --ifm-color-primary-darker: #0a7872;
@@ -11,6 +13,8 @@
 }
 
 [data-theme='dark'] {
+  --hero-glow: rgba(45, 212, 191, 0.15);
+  --hero-glow-card: rgba(45, 212, 191, 0.06);
   --ifm-color-primary: #2dd4bf;
   --ifm-color-primary-dark: #1cbcaa;
   --ifm-color-primary-darker: #1ab2a1;
