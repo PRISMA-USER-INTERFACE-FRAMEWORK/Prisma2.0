@@ -67,6 +67,14 @@ export default function Home(): JSX.Element {
             <Link className={styles.ctaPrimary} to={gettingStartedUrl}>
               Get started
             </Link>
+            <a
+              className={styles.ctaDownload}
+              href="https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma2.0/releases/latest"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download
+            </a>
             <Link className={styles.ctaSecondary} to={apiReferenceUrl}>
               API reference
             </Link>
