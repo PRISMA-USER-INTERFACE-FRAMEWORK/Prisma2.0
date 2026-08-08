@@ -1,0 +1,106 @@
+import { themes as prismThemes } from 'prism-react-renderer';
+import type { Config } from '@docusaurus/types';
+import type * as Preset from '@docusaurus/preset-classic';
+
+const config: Config = {
+  title: 'PrismaUI F4',
+  tagline: 'HTML/CSS/JS UI framework for Fallout 4',
+  url: 'https://prisma-user-interface-framework.github.io',
+  baseUrl: '/Prisma2.0/',
+  organizationName: 'PRISMA-USER-INTERFACE-FRAMEWORK',
+  projectName: 'Prisma2.0',
+  onBrokenLinks: 'throw',
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
+  },
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en'],
+  },
+
+  presets: [
+    [
+      'classic',
+      {
+        docs: {
+          sidebarPath: './sidebars.ts',
+        },
+        blog: false,
+        theme: {
+          customCss: './src/css/custom.css',
+        },
+      } satisfies Preset.Options,
+    ],
+  ],
+
+  plugins: [
+    [
+      '@easyops-cn/docusaurus-search-local',
+      {
+        hashed: true,
+        docsRouteBasePath: '/docs',
+      },
+    ],
+  ],
+
+  themeConfig: {
+    colorMode: {
+      defaultMode: 'dark',
+      disableSwitch: false,
+    },
+    navbar: {
+      title: 'PrismaUI F4',
+      items: [
+        {
+          type: 'docSidebar',
+          sidebarId: 'guideSidebar',
+          position: 'left',
+          label: 'Guides',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'apiSidebar',
+          position: 'left',
+          label: 'API Reference',
+        },
+        {
+          href: 'https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma2.0',
+          label: 'GitHub',
+          position: 'right',
+        },
+      ],
+    },
+    footer: {
+      style: 'dark',
+      links: [
+        {
+          title: 'Docs',
+          items: [
+            { label: 'Getting Started', to: '/docs/getting-started' },
+            { label: 'API Reference', to: '/docs/api-reference' },
+            { label: 'Changelog', to: '/docs/changelog' },
+          ],
+        },
+        {
+          title: 'Links',
+          items: [
+            {
+              label: 'GitHub',
+              href: 'https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma2.0',
+            },
+          ],
+        },
+      ],
+      copyright: `Copyright © ${new Date().getFullYear()} PRISMA UI. Built with Docusaurus.`,
+    },
+    prism: {
+      theme: prismThemes.github,
+      darkTheme: prismThemes.dracula,
+      additionalLanguages: ['powershell', 'cpp', 'lua', 'json'],
+    },
+  } satisfies Preset.ThemeConfig,
+};
+
+export default config;
