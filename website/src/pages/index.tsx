@@ -16,13 +16,13 @@ PrismaView view = api->CreateView("my-ui.html", [](PrismaView v) {
     });
     api->Invoke(v, "init()");
 });
-api->Hide(view);   // views start visible — hide until the player opens yours`;
+api->Hide(view);   // views start visible, hide until the player opens yours`;
 
 const FEATURES = [
   {
     label: 'Real Chromium',
     title: 'CEF 147',
-    body: 'The same engine that powers VS Code. Full ES2020+, WebGL, CSS Grid, Web Audio, and Web Workers — no proprietary renderer quirks.',
+    body: 'The same engine that powers VS Code. Full ES2020+, WebGL, CSS Grid, Web Audio, and Web Workers, no proprietary renderer quirks.',
   },
   {
     label: 'F4SE Native',
@@ -32,7 +32,7 @@ const FEATURES = [
   {
     label: 'Framework Agnostic',
     title: 'Any web stack',
-    body: 'Vanilla JS, React, Vue, Svelte — if it ships as HTML, CSS, and JS, it runs inside the game. No special build pipeline required.',
+    body: 'Vanilla JS, React, Vue, Svelte, if it ships as HTML, CSS, and JS, it runs inside the game. No special build pipeline required.',
   },
   {
     label: 'AI-Ready',
@@ -48,7 +48,7 @@ export default function Home(): JSX.Element {
 
   return (
     <Layout
-      title="PrismaUI F4 — HTML/JS UI framework for Fallout 4"
+      title="PrismaUI F4 HTML/JS UI framework for Fallout 4"
       description="Render any HTML, CSS, and JavaScript interface inside Fallout 4 using Chromium (CEF 147). Deep F4SE integration. Supports React, Vue, Svelte, and vanilla JS."
     >
       {/* hero */}
@@ -60,7 +60,7 @@ export default function Home(): JSX.Element {
             HTML, CSS, and JavaScript UI framework for Fallout 4
           </p>
           <p className={styles.heroSub}>
-            Powered by CEF 147 — real Chromium, the same engine as VS Code.
+            Powered by CEF 147, real Chromium, the same engine as VS Code.
             Deep F4SE integration. Supports any web framework.
           </p>
           <div className={styles.heroCta}>
@@ -103,7 +103,7 @@ export default function Home(): JSX.Element {
               <div className={styles.archBox}>
                 <span className={styles.archLabel}>You write</span>
                 <strong>HTML / CSS / JS</strong>
-                <span className={styles.archNote}>Any framework. React, Vue, vanilla — anything that ships as static files.</span>
+                <span className={styles.archNote}>Any framework. React, Vue, vanilla, anything that ships as static files.</span>
               </div>
               <div className={styles.archArrow}>→</div>
               <div className={`${styles.archBox} ${styles.archBoxCore}`}>
@@ -115,7 +115,7 @@ export default function Home(): JSX.Element {
               <div className={styles.archBox}>
                 <span className={styles.archLabel}>Appears on</span>
                 <strong>Game Screen</strong>
-                <span className={styles.archNote}>A D3D11 overlay — full-screen or windowed, on top of the game world.</span>
+                <span className={styles.archNote}>A D3D11 overlay, full-screen or windowed, on top of the game world.</span>
               </div>
             </div>
             <div className={styles.archBridge}>
@@ -127,6 +127,11 @@ export default function Home(): JSX.Element {
                 </span>
               </div>
             </div>
+            <p className={styles.archExampleNote}>
+              Not sure where to start?{' '}
+              <Link to={useBaseUrl('/docs/getting-started')}>The example plugin</Link>{' '}
+              ships with all this wired up already, clone it, build it, and you have a working UI in-game in minutes.
+            </p>
           </div>
         </section>
 
@@ -169,7 +174,7 @@ export default function Home(): JSX.Element {
                 <p className={styles.mcpDesc}>
                   <code>prisma-mcp</code> is a Model Context Protocol server that gives
                   Cursor, Claude Code, and any MCP-compatible AI live, structured access
-                  to the full API reference and all guides — always up to date.
+                  to the full API reference and all guides, always up to date.
                 </p>
                 <div className={styles.mcpActions}>
                   <Link className={styles.ctaPrimary} to={gettingStartedUrl}>
