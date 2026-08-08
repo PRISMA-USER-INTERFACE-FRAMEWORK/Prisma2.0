@@ -143,7 +143,7 @@ Concretely, it helps with three things:
   work; AI drafts them and I fix anything that's wrong.
 
 What AI does not do is design the architecture, make the engine-level calls, or ship unreviewed.
-I'm a software engineer with five years' experience and everything here goes through me: the CEF
+**I'm a software engineer with five years' experience and everything here goes through me:** the CEF
 integration, the D3D11 Present hook, the input routing, and the vtable-versioned API were designed
 and debugged by someone who understands them. Nothing in this framework is vibe-coded. AI speeds up
 the typing; it does not stand in for knowing what the code does or why.
