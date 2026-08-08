@@ -177,6 +177,94 @@
   padding: 0 24px;
 }
 
+/* ── how it works ───────────────────────────────────────────── */
+.howItWorks {
+  padding: 80px 0;
+  border-top: 1px solid var(--ifm-color-emphasis-100);
+}
+
+.arch {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 40px 0 0;
+  flex-wrap: wrap;
+}
+
+.archBox {
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-card-background-color);
+}
+
+.archBoxCore {
+  border-color: var(--ifm-color-primary);
+  border-width: 1.5px;
+  background: var(--hero-glow-card, var(--ifm-card-background-color));
+}
+
+.archLabel {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ifm-color-primary);
+}
+
+.archNote {
+  font-size: 0.8rem;
+  color: var(--ifm-color-content-secondary);
+  line-height: 1.5;
+}
+
+.archArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  font-size: 1.5rem;
+  color: var(--ifm-color-emphasis-500);
+  flex-shrink: 0;
+}
+
+.archBridge {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.archBridgeBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 28px;
+  border-radius: 10px;
+  border: 1px dashed var(--ifm-color-emphasis-400);
+  background: var(--ifm-background-surface-color);
+  max-width: 560px;
+  width: 100%;
+}
+
+.archBridgeBox strong {
+  font-size: 0.95rem;
+}
+
+@media (max-width: 640px) {
+  .arch {
+    flex-direction: column;
+  }
+  .archArrow {
+    transform: rotate(90deg);
+    padding: 4px 0;
+  }
+}
+
 /* ── features ───────────────────────────────────────────────── */
 .features {
   padding: 80px 0;

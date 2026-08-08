@@ -91,6 +91,45 @@ export default function Home(): JSX.Element {
       </header>
 
       <main>
+        {/* how it works */}
+        <section className={styles.howItWorks}>
+          <div className={styles.container}>
+            <h2 className={styles.sectionTitle}>How it works</h2>
+            <p className={styles.sectionSub}>
+              You write a web page. PrismaUI renders it inside Fallout 4 and
+              gives your C++ plugin a bridge to talk to it.
+            </p>
+            <div className={styles.arch}>
+              <div className={styles.archBox}>
+                <span className={styles.archLabel}>You write</span>
+                <strong>HTML / CSS / JS</strong>
+                <span className={styles.archNote}>Any framework. React, Vue, vanilla — anything that ships as static files.</span>
+              </div>
+              <div className={styles.archArrow}>→</div>
+              <div className={`${styles.archBox} ${styles.archBoxCore}`}>
+                <span className={styles.archLabel}>Renders via</span>
+                <strong>PrismaUI F4</strong>
+                <span className={styles.archNote}>CEF 147 (Chromium) runs your page in a hidden subprocess and composites it over the game.</span>
+              </div>
+              <div className={styles.archArrow}>→</div>
+              <div className={styles.archBox}>
+                <span className={styles.archLabel}>Appears on</span>
+                <strong>Game Screen</strong>
+                <span className={styles.archNote}>A D3D11 overlay — full-screen or windowed, on top of the game world.</span>
+              </div>
+            </div>
+            <div className={styles.archBridge}>
+              <div className={styles.archBridgeBox}>
+                <strong>Your F4SE Plugin (C++)</strong>
+                <span className={styles.archNote}>
+                  Calls <code>CreateView</code> / <code>Focus</code> / <code>InteropCall</code> to control the UI and push game data to JS.
+                  One header file. No linker dependency.
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* features */}
         <section className={styles.features}>
           <div className={styles.container}>
