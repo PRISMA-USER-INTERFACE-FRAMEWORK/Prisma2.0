@@ -11,9 +11,9 @@ The PrismaUI F4 framework tracks the health of every view it manages through a b
 
 When you call `CreateView`, the framework immediately begins watching that view. Internally it tracks three things:
 
-- **Load progression** — did the iframe mount and fire `OnDomReady` within the allowed window?
-- **Liveness** — is the page still responding to periodic heartbeat pings sent by the framework?
-- **JS error accumulation** — how many uncaught exceptions or `console.error` calls has the page produced?
+- **Load progression**, did the iframe mount and fire `OnDomReady` within the allowed window?
+- **Liveness**, is the page still responding to periodic heartbeat pings sent by the framework?
+- **JS error accumulation**, how many uncaught exceptions or `console.error` calls has the page produced?
 
 None of this requires any code from you. The watchdog updates the view's health state as these signals arrive, and `GetViewHealth` lets you read that state at any time.
 
@@ -62,7 +62,7 @@ The view is healthy and responding to the framework's liveness pings. This is th
 
 The HTML file could not be loaded. Common causes: the path passed to `CreateView` was wrong, the file is missing from the MO2 mod folder, or an asset the page depends on (script, stylesheet) produced a network error that aborted the load.
 
-This state is terminal for the current view handle — the page will not recover on its own.
+This state is terminal for the current view handle, the page will not recover on its own.
 
 **What to do:** Destroy the view and recreate it. Before recreating, verify the HTML path. If the path is correct the file is genuinely missing from disk; check your deploy step.
 
@@ -78,7 +78,7 @@ Like `kLoadFailed`, this state is terminal for the current view handle.
 
 The view was previously `kLive` but has stopped responding to heartbeat pings. This usually means the CEF subprocess crashed or the renderer process was killed by the OS.
 
-**What to do:** Log the event at error level. Optionally notify the user. You may attempt to destroy and recreate the view, but if the CEF subprocess itself has crashed, recreating will likely fail or also go unresponsive — check CEF crash logs before retrying.
+**What to do:** Log the event at error level. Optionally notify the user. You may attempt to destroy and recreate the view, but if the CEF subprocess itself has crashed, recreating will likely fail or also go unresponsive, check CEF crash logs before retrying.
 
 ### kJsError (6)
 
@@ -94,13 +94,13 @@ The view is still alive and responding to pings, but it has accumulated uncaught
 virtual ViewHealth GetViewHealth(PrismaView view) noexcept = 0;
 ```
 
-`GetViewHealth` is thread-safe. You may call it from any thread — the game update thread, an F4SE task, or a background thread — without additional locking. It is a non-blocking read of an atomic state value.
+`GetViewHealth` is thread-safe. You may call it from any thread, the game update thread, an F4SE task, or a background thread, without additional locking. It is a non-blocking read of an atomic state value.
 
 ### When to Poll
 
 `GetViewHealth` is intended for polling from a game update loop or from a periodic F4SE message handler. It is not an event callback; the framework does not push health change notifications. A reasonable polling cadence is once per game update frame, or less frequently if your plugin only needs to detect failures rather than react to every transition.
 
-Do not spin-poll from a background thread waiting for `kLive` — check health in your existing update path and act only when the state changes to a terminal failure value.
+Do not spin-poll from a background thread waiting for `kLive`, check health in your existing update path and act only when the state changes to a terminal failure value.
 
 ### Checking Validity First
 
@@ -128,7 +128,7 @@ g_view = 0;
 ScheduleViewRecreate();
 ```
 
-`ScheduleViewRecreate` should set a flag that your `kPostLoadGame` handler (or a delayed task) checks to call `CreateView` again. Do not call `CreateView` immediately inside the update loop — defer it to the next safe window.
+`ScheduleViewRecreate` should set a flag that your `kPostLoadGame` handler (or a delayed task) checks to call `CreateView` again. Do not call `CreateView` immediately inside the update loop, defer it to the next safe window.
 
 If `kLoadFailed` recurs, the HTML file is missing. Add a log message that prints the path so you can diagnose the deploy issue.
 
@@ -139,7 +139,7 @@ If `kDomReadyTimeout` recurs, the page is crashing during initialisation. Enable
 Log at error level. A single unresponsive event can be transient (the renderer process was briefly overloaded), but repeated failures indicate a subprocess crash:
 
 ```cpp
-logger::error("[MyPlugin] view unresponsive — CEF subprocess may have crashed");
+logger::error("[MyPlugin] view unresponsive CEF subprocess may have crashed");
 // Optionally destroy and attempt recreate after a delay, but do not loop.
 ```
 
@@ -151,7 +151,7 @@ Non-fatal. Log it and continue. In development builds, also enable console captu
 
 ```cpp
 case PRISMA_UI_API::ViewHealth::kJsError:
-    logger::warn("[MyPlugin] view has accumulated JS errors — check console output");
+    logger::warn("[MyPlugin] view has accumulated JS errors, check console output");
     break;
 ```
 
@@ -194,7 +194,7 @@ namespace {
 
         g_view = g_api->CreateView("Interface/MyPlugin/main.html",
             [](PRISMA_UI_API::PrismaView view) {
-                // OnDomReady — safe to register listeners and invoke JS.
+                // OnDomReady, safe to register listeners and invoke JS.
                 g_api->RegisterJSListener(view, "onClose",
                     [](const char*) {
                         g_api->Unfocus(g_view);
@@ -236,22 +236,22 @@ namespace {
         switch (health) {
             case VH::kLive:
             case VH::kDomReady:
-                // Normal — nothing to do.
+                // Normal, nothing to do.
                 break;
 
             case VH::kCreating:
-                // Still loading — wait.
+                // Still loading, wait.
                 break;
 
             case VH::kLoadFailed:
-                logger::warn("[MyPlugin] view load failed — check HTML path, scheduling recreate");
+                logger::warn("[MyPlugin] view load failed, check HTML path, scheduling recreate");
                 g_api->Destroy(g_view);
                 g_view = 0;
                 ScheduleViewRecreate();
                 break;
 
             case VH::kDomReadyTimeout:
-                logger::warn("[MyPlugin] view DomReady timed out — page may have crashed, "
+                logger::warn("[MyPlugin] view DomReady timed out, page may have crashed, "
                              "scheduling recreate (health={})", static_cast<int>(health));
                 g_api->Destroy(g_view);
                 g_view = 0;
@@ -259,7 +259,7 @@ namespace {
                 break;
 
             case VH::kUnresponsive:
-                logger::error("[MyPlugin] view unresponsive — CEF subprocess may have crashed");
+                logger::error("[MyPlugin] view unresponsive CEF subprocess may have crashed");
                 // Do not auto-recreate in a loop; leave it for the user to reload the game.
                 break;
 

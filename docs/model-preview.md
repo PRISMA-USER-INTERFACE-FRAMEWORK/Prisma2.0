@@ -7,7 +7,7 @@ sidebar_position: 11
 
 # Model Preview (3D Rendering)
 
-ModelPreview renders a live 3D mesh — a weapon, armor piece, world object, or any other form — directly inside a PrismaUI view. The model is rendered off-screen as a D3D11 texture and composited into the view region you specify. From the player's perspective it looks like a rotating 3D object embedded in your HTML UI.
+ModelPreview renders a live 3D mesh, a weapon, armor piece, world object, or any other form, directly inside a PrismaUI view. The model is rendered off-screen as a D3D11 texture and composited into the view region you specify. From the player's perspective it looks like a rotating 3D object embedded in your HTML UI.
 
 The entire API is called from JavaScript. C++ creates the view normally; nothing extra is needed to enable ModelPreview.
 
@@ -53,7 +53,7 @@ window.prismaModelPreview.show({
 });
 ```
 
-All pixel coordinates are in view space — the same coordinate space as your HTML layout, with (0, 0) at the top-left of the view.
+All pixel coordinates are in view space, the same coordinate space as your HTML layout, with (0, 0) at the top-left of the view.
 
 `rotation` and `zoom` are optional. Omitting them applies the framework defaults (no initial rotation offset, auto-fit zoom).
 
@@ -121,7 +121,7 @@ window.onModelPreviewStatus = function(jsonStr) {
     const s = JSON.parse(jsonStr);
 
     if (s.status === 'loaded') {
-        // model is rendering — make sure the HTML region is visible
+        // model is rendering, make sure the HTML region is visible
         previewContainer.style.visibility = 'visible';
         fallbackImg.style.display = 'none';
     } else if (s.status === 'failed') {
@@ -135,7 +135,7 @@ window.onModelPreviewStatus = function(jsonStr) {
 };
 ```
 
-**Material fallback:** If a `.BGSM` material file cannot be loaded (for example, a mod-added material not included in its BA2 archive), the framework logs a warning and renders the model with a fallback material. This is non-fatal — the model still appears. The `onModelPreviewStatus` callback will fire `"loaded"`, not `"failed"`.
+**Material fallback:** If a `.BGSM` material file cannot be loaded (for example, a mod-added material not included in its BA2 archive), the framework logs a warning and renders the model with a fallback material. This is non-fatal, the model still appears. The `onModelPreviewStatus` callback will fire `"loaded"`, not `"failed"`.
 
 ---
 
@@ -276,7 +276,7 @@ The following is a realistic inventory screen that renders the selected item in 
   }
 
   // ------------------------------------------------------------------
-  // ModelPreview status handler — assign before calling show()
+  // ModelPreview status handler, assign before calling show()
   // ------------------------------------------------------------------
   window.onModelPreviewStatus = function(jsonStr) {
     var s = JSON.parse(jsonStr);
@@ -433,5 +433,5 @@ function closeInventory() {
 ## Placement Tips
 
 - Measure the destination rect from the DOM (`getBoundingClientRect()`) rather than hard-coding pixel values. Layout shifts at different resolutions will misalign a hard-coded rect.
-- The preview is a D3D11 texture overlay — it composites on top of everything in the view, including HTML elements. Do not place HTML content over the destination rect; it will be obscured.
+- The preview is a D3D11 texture overlay, it composites on top of everything in the view, including HTML elements. Do not place HTML content over the destination rect; it will be obscured.
 - If you want a border or label around the preview, position those HTML elements just outside the rect, not inside it.

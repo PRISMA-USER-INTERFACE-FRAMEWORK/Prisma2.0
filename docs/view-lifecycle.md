@@ -46,13 +46,13 @@ A PrismaUI view moves through these states:
 
 ```cpp
 PrismaView view = api->CreateView("page.html", OnDomReady);
-// views start visible — hide immediately unless you want it on screen at load:
+// views start visible, hide immediately unless you want it on screen at load:
 api->Hide(view);
 ```
 
 `CreateView` is asynchronous - the HTML file is loaded via CEF's own render process. Your `OnDomReady` callback fires on the **main game thread** (via `F4SE::GetTaskInterface()->AddTask`) after the DOM is parsed and all inline `<script>` blocks have executed.
 
-**Do not call `Invoke` before `OnDomReady` fires** — it requires a live JS context. `RegisterJSListener` is C++-side registration only and may safely be called before `OnDomReady`.
+**Do not call `Invoke` before `OnDomReady` fires**, it requires a live JS context. `RegisterJSListener` is C++-side registration only and may safely be called before `OnDomReady`.
 
 **Create views on `kPostLoadGame` / `kNewGame`**, not on `kGameDataReady`:
 
@@ -190,7 +190,7 @@ document.addEventListener('keydown', e => {
 });
 ```
 
-Only enable this on a view that actively handles Escape. If the view ignores the key, the player has no way to dismiss the focused UI — Escape no longer opens the PauseMenu as a fallback.
+Only enable this on a view that actively handles Escape. If the view ignores the key, the player has no way to dismiss the focused UI Escape no longer opens the PauseMenu as a fallback.
 
 ### `HasAnyActiveFocus`
 
@@ -270,7 +270,7 @@ Mouse wheel events are forwarded to the focused view. Scroll amount is tunable p
 api->SetScrollingPixelSize(view, 40);  // default is 28 px per tick
 ```
 
-> **Note:** `SetScrollingPixelSize` / `GetScrollingPixelSize` are not yet implemented in the CEF backend — both are no-ops that log "not yet implemented". See [limitations](limitations.md).
+> **Note:** `SetScrollingPixelSize` / `GetScrollingPixelSize` are not yet implemented in the CEF backend, both are no-ops that log "not yet implemented". See [limitations](limitations.md).
 
 ---
 
