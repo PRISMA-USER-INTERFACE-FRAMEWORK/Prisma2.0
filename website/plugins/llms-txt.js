@@ -48,6 +48,7 @@ module.exports = function llmsTxtPlugin(context) {
         '',
         '> HTML/CSS/JS UI framework for Fallout 4.',
         '> Powered by CEF 147 (real Chromium). F4SE native integration.',
+        '> Markdown source for any page is available by appending .md to its URL.',
         '> Install `npx -y prisma-mcp` to give any MCP-compatible AI assistant live access to these docs.',
         '',
         '## Guides',

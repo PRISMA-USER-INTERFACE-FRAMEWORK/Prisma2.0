@@ -1,15 +1,30 @@
-// copies website/docs/ (the synced snapshot) into build/source-docs/ so
-// the "Copy as Markdown" button can fetch the raw .md at runtime.
-const { cpSync } = require('fs');
+// places raw .md files alongside the built HTML so any doc page URL + ".md"
+// returns the Markdown source. e.g. /Prisma2.0/docs/getting-started.md
+//
+// only .md files are copied; the existing HTML directory structure is untouched.
+const fs = require('fs');
 const path = require('path');
+
+function copyMd(srcDir, destDir) {
+  for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
+    const srcPath = path.join(srcDir, entry.name);
+    const destPath = path.join(destDir, entry.name);
+    if (entry.isDirectory()) {
+      fs.mkdirSync(destPath, { recursive: true });
+      copyMd(srcPath, destPath);
+    } else if (entry.name.endsWith('.md')) {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}
 
 module.exports = function sourceDocsPlugin(context) {
   return {
     name: 'source-docs-plugin',
     async postBuild({ outDir }) {
-      const src = path.join(context.siteDir, 'docs');
-      const dest = path.join(outDir, 'source-docs');
-      cpSync(src, dest, { recursive: true, force: true });
+      const srcDir = path.join(context.siteDir, 'docs');
+      const destDir = path.join(outDir, 'docs');
+      copyMd(srcDir, destDir);
     },
   };
 };

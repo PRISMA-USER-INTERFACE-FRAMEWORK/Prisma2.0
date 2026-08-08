@@ -40,7 +40,9 @@ const MCP_TABS = [
 
 export default function AiToolbar(): JSX.Element {
   const { metadata } = useDoc();
-  const sourceDocPath = useBaseUrl(`/source-docs/${metadata.id}.md`);
+  // raw markdown is served at the same URL as the page + ".md"
+  // e.g. /Prisma2.0/docs/getting-started → /Prisma2.0/docs/getting-started.md
+  const sourceDocPath = useBaseUrl(`/docs/${metadata.id}.md`);
 
   const [copyState, setCopyState] = useState<CopyState>('idle');
   const [modalOpen, setModalOpen] = useState(false);
