@@ -2,22 +2,36 @@ import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 const sidebars: SidebarsConfig = {
   guideSidebar: [
-    'getting-started',
-    'html-views',
-    'view-lifecycle',
-    'modern-frameworks',
-    'examples',
-    'limitations',
-    '1.0-vs-2.0',
-    'papyrus-bridge',
-    'translations',
-    'vanilla-ui-suppression',
-    'model-preview',
-    'view-watchdog',
-    'networking',
-    'panel-management',
-    'api-reference',
-    'changelog',
+    {
+      type: 'category',
+      label: 'Introduction',
+      collapsed: false,
+      items: ['what-is-prismaui', 'quick-start', 'getting-started'],
+    },
+    {
+      type: 'category',
+      label: 'Core Concepts',
+      collapsed: false,
+      items: ['html-views', 'view-lifecycle', 'modern-frameworks', 'papyrus-bridge', 'translations'],
+    },
+    {
+      type: 'category',
+      label: 'Systems',
+      collapsed: false,
+      items: [
+        'vanilla-ui-suppression',
+        'model-preview',
+        'view-watchdog',
+        'networking',
+        'panel-management',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Reference',
+      collapsed: false,
+      items: ['api-reference', 'examples', 'limitations', '1.0-vs-2.0', 'changelog'],
+    },
   ],
   apiSidebar: [
     {
