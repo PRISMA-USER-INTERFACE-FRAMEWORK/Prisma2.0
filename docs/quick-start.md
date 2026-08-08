@@ -252,4 +252,4 @@ The JS function name in `RegisterJSListener` and the function called in HTML mus
 - **Send data to your panel:** call `g_api->InteropCall(g_view, "fnName", jsonString)` from C++ to call `window.fnName(arg)` in JS. Good for updating values while the panel is open.
 - **Receive data from JS:** add more `RegisterJSListener` calls inside `OnDomReady` for each event your HTML needs to send back.
 - **Console debugging:** register a `ConsoleMessageCallback` (see `IVPrismaUI2::RegisterConsoleCallback`) to mirror JS `console.log` output into `PrismaUI_F4.log`.
-- **Full API reference:** see [API Reference](api/index.md) for every method, and [View Lifecycle](view-lifecycle.md) for timing rules when doing more complex work.
+- **Full API reference:** see [API Reference](api-reference.md) for every method, and [View Lifecycle](view-lifecycle.md) for timing rules when doing more complex work.
