@@ -68,12 +68,20 @@ export default function Home(): JSX.Element {
               Get started
             </Link>
             <a
-              className={styles.ctaDownload}
-              href="https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma2.0/releases/latest"
+              className={styles.ctaNexus}
+              href="https://www.nexusmods.com/fallout4/mods/105454"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Download
+              Download on Nexus
+            </a>
+            <a
+              className={styles.ctaDiscord}
+              href="https://discord.com/invite/bawdketrFX"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Discord
             </a>
             <Link className={styles.ctaSecondary} to={apiReferenceUrl}>
               API reference

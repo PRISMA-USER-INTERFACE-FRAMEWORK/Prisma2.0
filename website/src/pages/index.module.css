@@ -86,6 +86,46 @@
   transform: translateY(-1px);
 }
 
+.ctaNexus {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  background: #da8e35;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none !important;
+  transition: opacity 0.15s, transform 0.15s;
+  cursor: pointer;
+}
+
+.ctaNexus:hover {
+  opacity: 0.87;
+  transform: translateY(-1px);
+}
+
+.ctaDiscord {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  background: #5865F2;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none !important;
+  transition: opacity 0.15s, transform 0.15s;
+  cursor: pointer;
+}
+
+.ctaDiscord:hover {
+  opacity: 0.87;
+  transform: translateY(-1px);
+}
+
 .ctaDownload {
   display: inline-flex;
   align-items: center;

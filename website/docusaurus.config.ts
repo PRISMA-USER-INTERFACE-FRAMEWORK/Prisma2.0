@@ -68,6 +68,16 @@ const config: Config = {
           label: 'API Reference',
         },
         {
+          href: 'https://www.nexusmods.com/fallout4/mods/105454',
+          label: 'Nexus',
+          position: 'right',
+        },
+        {
+          href: 'https://discord.com/invite/bawdketrFX',
+          label: 'Discord',
+          position: 'right',
+        },
+        {
           href: 'https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma2.0',
           label: 'GitHub',
           position: 'right',
@@ -91,6 +101,14 @@ const config: Config = {
             {
               label: 'GitHub',
               href: 'https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma2.0',
+            },
+            {
+              label: 'Nexus Mods',
+              href: 'https://www.nexusmods.com/fallout4/mods/105454',
+            },
+            {
+              label: 'Discord',
+              href: 'https://discord.com/invite/bawdketrFX',
             },
           ],
         },
