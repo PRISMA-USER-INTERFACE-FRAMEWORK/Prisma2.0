@@ -477,8 +477,24 @@ namespace PRISMA_UI_API {
 
     typedef void* (*RequestPluginAPIFunc)(InterfaceVersion interfaceVersion);
 
+    /// The one place that knows what the provider DLL is called.
+    ///
+    /// PrismaUI ships as a DIFFERENT FILE per game: `PrismaUI_F4.dll` on flat Fallout 4 and
+    /// `PrismaUI_F4VR.dll` on Fallout 4 VR, because the two need different CommonLib builds and
+    /// different game executables. Your plugin cannot know which one it was loaded beside, so a
+    /// single hardcoded name is wrong on exactly one of the two games.
+    ///
+    /// Only one provider is ever present in a process, so the order below is a fast path for the
+    /// common case, not a precedence rule.
+    [[nodiscard]] inline HMODULE GetPrismaProviderModule() noexcept {
+        if (auto* flat = GetModuleHandleW(L"PrismaUI_F4.dll")) {
+            return flat;
+        }
+        return GetModuleHandleW(L"PrismaUI_F4VR.dll");
+    }
+
     [[nodiscard]] inline void* RequestPluginAPI(InterfaceVersion a_interfaceVersion = InterfaceVersion::V1) {
-        auto pluginHandle = GetModuleHandleW(L"PrismaUI_F4.dll");
+        auto pluginHandle = GetPrismaProviderModule();
         if (!pluginHandle) {
             return nullptr;
         }
