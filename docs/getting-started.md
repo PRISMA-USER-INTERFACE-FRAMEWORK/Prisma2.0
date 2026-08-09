@@ -7,6 +7,13 @@ project - if you've done this before, skip to [Step 2](#step-2-clone-the-example
 By the end, pressing **F4** in-game will pop up a small green terminal-style box with a title and
 a message. That's it - a minimal starting point you then build your real UI on top of.
 
+:::info Which path is right for you?
+
+- **New to F4SE plugins entirely:** Continue from Step 0 below. Takes about 20-30 minutes.
+- **Already have an F4SE plugin compiling:** Go straight to the [Quick Start](quick-start) guide. Takes about 10 minutes.
+
+:::
+
 **Using Claude or another AI assistant to help write your plugin?** Install
 [`prisma-mcp`](../mcp-server/) first - it gives your assistant live, always-current access to
 every API method's real signature and docs instead of it guessing from training data. This is
