@@ -52,10 +52,29 @@ PrismaUI_F4 release history, newest first. Click a date to expand it.
   instead of being reset to the full screen, so clicks near the edges went nowhere. Cleared on every
   Focus call now, not just the first of the session.
 
+- **Clicks did nothing if a mod took focus before the browser had finished starting.** Focus taken
+  that early captured your input and discarded it, while still reporting success to the calling mod,
+  so a view could look focused and be completely unresponsive. Focus now refuses in that window
+  instead of silently swallowing input.
+
 - **Alt+F4 stopped working while a view held input capture.** Fixed at the framework level so it
   works regardless of plugin load order.
 
+- **Scroll wheel and on-mesh click accuracy.** Wheel events use screen coordinates and were being
+  treated like every other mouse message, and views bound to in-world screens (Pip-Boy, terminals)
+  had their coordinates scaled twice, leaving part of the surface unclickable. Both corrected.
+
+- **Rebinding a view to a different mesh silently did nothing** — it reported success while the
+  screen never updated.
+
 - General cleanup pass over escape-key ownership, input routing, and mesh-view input binding.
+
+### Stability
+
+- **Fixed a freeze when using a workshop crafting bench.**
+
+- **Fixed a crash from a view's texture being released while the engine was still drawing the mesh
+  it was bound to.**
 
 ### View health and reliability
 
