@@ -5,6 +5,37 @@ PrismaUI_F4 release history, newest first. Click a date to expand it.
 ---
 
 <details open>
+<summary><strong>2026-08-09</strong></summary>
+
+### SDK
+
+- **The SDK header could not reach the framework on Fallout 4 VR.** PrismaUI ships as a different
+  file per game — `PrismaUI_F4.dll` on flat Fallout 4, `PrismaUI_F4VR.dll` on Fallout 4 VR — and the
+  header only ever looked for the flat name. On VR it found nothing, so `RequestPluginAPI` and
+  `RequestPluginVRAPI` both returned `nullptr` and a C++ plugin could not obtain any interface.
+
+  It failed quietly rather than loudly, because `nullptr` from `RequestPluginVRAPI` is also the
+  documented "this is not a VR provider" signal — so a VR plugin concluded it was running on flat
+  Fallout 4 and fell back to screen-space views.
+
+  **If you drive PrismaUI from Papyrus, you were not affected** and nothing changes for you. Papyrus
+  reaches the framework in-process and never used the header.
+
+  **If you write a C++ plugin, take the updated `PrismaUI_F4_API.h` and `PrismaUI_F4VR_API.h`.** No
+  interface, method or vtable slot changed — only how the provider DLL is located — so it is a
+  drop-in replacement and your existing calls are unchanged. The header inside the earlier
+  `v2.0.0-beta` download predates this fix.
+  ([#23](https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma2.0/issues/23))
+
+- **The SDK headers are now part of the release package** (`Developer/`), copied straight from the
+  source tree and byte-checked during packaging. Previously they were assembled by hand, which is
+  how the shipped copy drifted behind the code in the first place.
+
+</details>
+
+---
+
+<details>
 <summary><strong>2026-08-08</strong></summary>
 
 ### Input and focus
