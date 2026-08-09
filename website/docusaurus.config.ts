@@ -45,6 +45,15 @@ const config: Config = {
     ],
     './plugins/source-docs',
     './plugins/llms-txt',
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'bgs',
+        path: 'bgs-docs',
+        routeBasePath: 'tools/behaviourgraphstudio/guide',
+        sidebarPath: './bgsSidebars.ts',
+      },
+    ],
   ],
 
   themeConfig: {

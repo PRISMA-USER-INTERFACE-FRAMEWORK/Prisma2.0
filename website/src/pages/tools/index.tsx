@@ -5,7 +5,8 @@ import Layout from '@theme/Layout';
 import styles from './styles.module.css';
 
 export default function ToolsIndex(): JSX.Element {
-  const behaviourGraphStudioImage = useBaseUrl('/img/behaviourgraphstudio.webp');
+  const prismaLogo = useBaseUrl('/img/prisma-logo.png');
+  const behaviorGraphStudioImage = useBaseUrl('/img/behaviourgraphstudio.webp');
 
   const TOOLS = [
     {
@@ -14,15 +15,17 @@ export default function ToolsIndex(): JSX.Element {
       tags: ['F4SE Framework', 'v2.0 Beta'],
       pitch: 'HTML, CSS, and JavaScript UI framework for Fallout 4, powered by real Chromium (CEF 147).',
       href: '/',
-      image: null as string | null,
+      image: prismaLogo,
+      imageFit: 'contain' as const,
     },
     {
-      id: 'behaviourgraphstudio',
-      name: 'BehaviourGraphStudio',
+      id: 'behaviorgraphstudio',
+      name: 'Behavior Graph Studio',
       tags: ['.NET / Avalonia', 'Modding Tool'],
       pitch: "A visual editor for Fallout 4's Havok behaviour graphs. Open, edit, and save animation state machines directly, no Havok Content Tools required.",
       href: '/tools/behaviourgraphstudio',
-      image: behaviourGraphStudioImage,
+      image: behaviorGraphStudioImage,
+      imageFit: 'cover' as const,
     },
   ];
 
@@ -47,11 +50,17 @@ export default function ToolsIndex(): JSX.Element {
             <div className={styles.cardGrid}>
               {TOOLS.map((tool) => (
                 <Link key={tool.id} to={tool.href} className={styles.card}>
-                  {tool.image && (
-                    <div className={styles.cardImageWrap}>
-                      <img src={tool.image} alt={tool.name} className={styles.cardImage} />
-                    </div>
-                  )}
+                  <div
+                    className={styles.cardImageWrap}
+                    style={tool.imageFit === 'contain' ? {background: '#000'} : undefined}
+                  >
+                    <img
+                      src={tool.image}
+                      alt={tool.name}
+                      className={styles.cardImage}
+                      style={{objectFit: tool.imageFit}}
+                    />
+                  </div>
                   <div className={styles.cardBody}>
                     <div className={styles.tagRow}>
                       {tool.tags.map((tag) => (
