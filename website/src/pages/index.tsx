@@ -55,6 +55,7 @@ export default function Home(): JSX.Element {
       <header className={styles.hero}>
         <div className={styles.heroInner}>
           <img src={logoUrl} alt="PrismaUI F4" className={styles.heroLogo} />
+          <span className={styles.versionBadge}>v2.0 beta, now shipping</span>
           <h1 className={styles.heroTitle}>PrismaUI F4</h1>
           <p className={styles.heroTagline}>
             HTML, CSS, and JavaScript UI framework for Fallout 4
@@ -146,6 +147,24 @@ export default function Home(): JSX.Element {
                   <p className={styles.featureDesc}>{f.body}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* showcase */}
+        <section className={styles.showcase}>
+          <div className={styles.container}>
+            <h2 className={styles.sectionTitle}>Runs in the game world</h2>
+            <p className={styles.sectionSub}>
+              A floating enemy health bar rendered as an HTML overlay in Fallout 4.
+              No Scaleform. No SWF files. Just HTML and CSS.
+            </p>
+            <div className={styles.showcaseImgWrap}>
+              <img
+                src={useBaseUrl('/img/showcase-hud.webp')}
+                alt="PrismaUI rendering a floating HP bar in Fallout 4"
+                className={styles.showcaseImg}
+              />
             </div>
           </div>
         </section>
