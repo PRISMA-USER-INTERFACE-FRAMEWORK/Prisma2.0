@@ -68,6 +68,11 @@ const config: Config = {
           label: 'API Reference',
         },
         {
+          to: '/tools',
+          position: 'left',
+          label: 'Tools',
+        },
+        {
           href: 'https://www.nexusmods.com/fallout4/mods/105454',
           label: 'Nexus',
           position: 'right',
