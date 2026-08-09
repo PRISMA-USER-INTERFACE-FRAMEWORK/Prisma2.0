@@ -1,0 +1,221 @@
+import React from 'react';
+import Link from '@docusaurus/Link';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import Layout from '@theme/Layout';
+import CodeBlock from '@theme/CodeBlock';
+import styles from './index.module.css';
+
+const QUICK_START = `// 1. request the api on kGameDataReady
+auto* api = PRISMA_UI_API::RequestPluginAPI<IVPrismaUI2>();
+
+// 2. create a view on kPostLoadGame / kNewGame
+PrismaView view = api->CreateView("my-ui.html", [](PrismaView v) {
+    api->RegisterJSListener(v, "close", [](const char*) {
+        api->Unfocus(view);
+        api->Hide(view);
+    });
+    api->Invoke(v, "init()");
+});
+api->Hide(view);   // views start visible, hide until the player opens yours`;
+
+const FEATURES = [
+  {
+    label: 'Real Chromium',
+    title: 'CEF 147',
+    body: 'The same engine that powers VS Code. Full ES2020+, WebGL, CSS Grid, Web Audio, and Web Workers, no proprietary renderer quirks.',
+  },
+  {
+    label: 'F4SE Native',
+    title: 'Deep integration',
+    body: 'JS listeners run on the main game thread. Direct access to RE::Actor, GMSTs, and Papyrus properties from inside callbacks.',
+  },
+  {
+    label: 'Framework Agnostic',
+    title: 'Any web stack',
+    body: 'Vanilla JS, React, Vue, Svelte, if it ships as HTML, CSS, and JS, it runs inside the game. No special build pipeline required.',
+  },
+  {
+    label: 'AI-Ready',
+    title: 'prisma-mcp',
+    body: 'An MCP server that gives Cursor, Claude Code, and any MCP-compatible AI live, structured access to every method and guide.',
+  },
+];
+
+export default function Home(): JSX.Element {
+  const gettingStartedUrl = useBaseUrl('/docs/getting-started');
+  const apiReferenceUrl = useBaseUrl('/docs/api-reference');
+  const logoUrl = useBaseUrl('/img/prisma-logo.png');
+
+  return (
+    <Layout
+      title="PrismaUI F4 HTML/JS UI framework for Fallout 4"
+      description="Render any HTML, CSS, and JavaScript interface inside Fallout 4 using Chromium (CEF 147). Deep F4SE integration. Supports React, Vue, Svelte, and vanilla JS."
+    >
+      {/* hero */}
+      <header className={styles.hero}>
+        <div className={styles.heroInner}>
+          <img src={logoUrl} alt="PrismaUI F4" className={styles.heroLogo} />
+          <span className={styles.versionBadge}>v2.0 beta, now shipping</span>
+          <h1 className={styles.heroTitle}>PrismaUI F4</h1>
+          <p className={styles.heroTagline}>
+            HTML, CSS, and JavaScript UI framework for Fallout 4
+          </p>
+          <p className={styles.heroSub}>
+            Powered by CEF 147, real Chromium, the same engine as VS Code.
+            Deep F4SE integration. Supports any web framework.
+          </p>
+          <div className={styles.heroCta}>
+            <Link className={styles.ctaPrimary} to={gettingStartedUrl}>
+              Get started
+            </Link>
+            <a
+              className={styles.ctaNexus}
+              href="https://www.nexusmods.com/fallout4/mods/105454"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download on Nexus
+            </a>
+            <a
+              className={styles.ctaDiscord}
+              href="https://discord.com/invite/bawdketrFX"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Discord
+            </a>
+            <Link className={styles.ctaSecondary} to={apiReferenceUrl}>
+              API reference
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        {/* how it works */}
+        <section className={styles.howItWorks}>
+          <div className={styles.container}>
+            <h2 className={styles.sectionTitle}>How it works</h2>
+            <p className={styles.sectionSub}>
+              You write a web page. PrismaUI renders it inside Fallout 4 and
+              gives your C++ plugin a bridge to talk to it.
+            </p>
+            <div className={styles.arch}>
+              <div className={styles.archBox}>
+                <span className={styles.archLabel}>You write</span>
+                <strong>HTML / CSS / JS</strong>
+                <span className={styles.archNote}>Any framework. React, Vue, vanilla, anything that ships as static files.</span>
+              </div>
+              <div className={styles.archArrow}>→</div>
+              <div className={`${styles.archBox} ${styles.archBoxCore}`}>
+                <span className={styles.archLabel}>Renders via</span>
+                <strong>PrismaUI F4</strong>
+                <span className={styles.archNote}>CEF 147 (Chromium) runs your page in a hidden subprocess and composites it over the game.</span>
+              </div>
+              <div className={styles.archArrow}>→</div>
+              <div className={styles.archBox}>
+                <span className={styles.archLabel}>Appears on</span>
+                <strong>Game Screen</strong>
+                <span className={styles.archNote}>A D3D11 overlay, full-screen or windowed, on top of the game world.</span>
+              </div>
+            </div>
+            <div className={styles.archBridge}>
+              <div className={styles.archBridgeBox}>
+                <strong>Your F4SE Plugin (C++)</strong>
+                <span className={styles.archNote}>
+                  Calls <code>CreateView</code> / <code>Focus</code> / <code>InteropCall</code> to control the UI and push game data to JS.
+                  One header file. No linker dependency.
+                </span>
+              </div>
+            </div>
+            <p className={styles.archExampleNote}>
+              Not sure where to start?{' '}
+              <Link to={useBaseUrl('/docs/getting-started')}>The example plugin</Link>{' '}
+              ships with all this wired up already, clone it, build it, and you have a working UI in-game in minutes.
+            </p>
+          </div>
+        </section>
+
+        {/* features */}
+        <section className={styles.features}>
+          <div className={styles.container}>
+            <div className={styles.featureGrid}>
+              {FEATURES.map((f) => (
+                <div key={f.label} className={styles.featureCard}>
+                  <span className={styles.featureLabel}>{f.label}</span>
+                  <h3 className={styles.featureTitle}>{f.title}</h3>
+                  <p className={styles.featureDesc}>{f.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* showcase */}
+        <section className={styles.showcase}>
+          <div className={styles.container}>
+            <h2 className={styles.sectionTitle}>Runs in the game world</h2>
+            <p className={styles.sectionSub}>
+              A floating enemy health bar rendered as an HTML overlay in Fallout 4.
+              No Scaleform. No SWF files. Just HTML and CSS.
+            </p>
+            <div className={styles.showcaseImgWrap}>
+              <img
+                src={useBaseUrl('/img/showcase-hud.webp')}
+                alt="PrismaUI rendering a floating HP bar in Fallout 4"
+                className={styles.showcaseImg}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* quick start */}
+        <section className={styles.quickStart}>
+          <div className={styles.container}>
+            <h2 className={styles.sectionTitle}>Five minutes to a working UI</h2>
+            <p className={styles.sectionSub}>
+              One header file. No link-time dependency on the framework DLL.
+              Works in any xmake F4SE plugin.
+            </p>
+            <CodeBlock language="cpp">{QUICK_START}</CodeBlock>
+            <Link className={styles.sectionLink} to={gettingStartedUrl}>
+              Full walkthrough, from scratch →
+            </Link>
+          </div>
+        </section>
+
+        {/* MCP */}
+        <section className={styles.mcpSection}>
+          <div className={styles.container}>
+            <div className={styles.mcpCard}>
+              <div className={styles.mcpText}>
+                <h2 className={styles.mcpTitle}>Connect your AI assistant</h2>
+                <p className={styles.mcpDesc}>
+                  <code>prisma-mcp</code> is a Model Context Protocol server that gives
+                  Cursor, Claude Code, and any MCP-compatible AI live, structured access
+                  to the full API reference and all guides, always up to date.
+                </p>
+                <div className={styles.mcpActions}>
+                  <Link className={styles.ctaPrimary} to={gettingStartedUrl}>
+                    Get started
+                  </Link>
+                  <Link className={styles.ctaSecondary} to={apiReferenceUrl}>
+                    Browse the API
+                  </Link>
+                </div>
+              </div>
+              <div className={styles.mcpCode}>
+                <CodeBlock language="bash">{'claude mcp add prisma-mcp -- npx -y prisma-mcp'}</CodeBlock>
+                <CodeBlock language="json">{JSON.stringify(
+                  { mcpServers: { 'prisma-mcp': { command: 'npx', args: ['-y', 'prisma-mcp'] } } },
+                  null,
+                  2,
+                )}</CodeBlock>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </Layout>
+  );
+}
