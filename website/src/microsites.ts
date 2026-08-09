@@ -43,6 +43,37 @@ export const MICROSITES: Microsite[] = [
     ],
     copyrightName: 'Behavior Graph Studio',
   },
+  {
+    pathPrefix: '/tools/prismadesigner',
+    name: 'Prisma Designer',
+    homeTo: '/tools/prismadesigner',
+    navItems: [
+      {label: 'Guide', to: '/tools/prismadesigner/guide/getting-started'},
+      {label: 'All Tools', to: '/tools'},
+    ],
+    externalNavItems: [
+      {
+        label: 'GitHub',
+        href: 'https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma-Designer',
+      },
+      {
+        label: 'Releases',
+        href: 'https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma-Designer/releases',
+      },
+    ],
+    footerLinks: [
+      {label: 'Guide', to: '/tools/prismadesigner/guide/getting-started'},
+      {
+        label: 'GitHub',
+        href: 'https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma-Designer',
+      },
+      {
+        label: 'Releases',
+        href: 'https://github.com/PRISMA-USER-INTERFACE-FRAMEWORK/Prisma-Designer/releases',
+      },
+    ],
+    copyrightName: 'Prisma Designer',
+  },
 ];
 
 function joinPath(baseUrl: string, path: string): string {

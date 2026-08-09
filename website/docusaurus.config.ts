@@ -54,6 +54,15 @@ const config: Config = {
         sidebarPath: './bgsSidebars.ts',
       },
     ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'designer',
+        path: 'designer-docs',
+        routeBasePath: 'tools/prismadesigner/guide',
+        sidebarPath: './designerSidebars.ts',
+      },
+    ],
   ],
 
   themeConfig: {

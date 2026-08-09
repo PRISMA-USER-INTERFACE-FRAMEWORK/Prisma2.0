@@ -7,6 +7,7 @@ import styles from './styles.module.css';
 export default function ToolsIndex(): JSX.Element {
   const prismaLogo = useBaseUrl('/img/prisma-logo.png');
   const behaviorGraphStudioImage = useBaseUrl('/img/behaviourgraphstudio.webp');
+  const prismaDesignerImage = useBaseUrl('/img/prisma-designer-main-menu.png');
 
   const TOOLS = [
     {
@@ -25,6 +26,15 @@ export default function ToolsIndex(): JSX.Element {
       pitch: "A visual editor for Fallout 4's Havok behaviour graphs. Open, edit, and save animation state machines directly, no Havok Content Tools required.",
       href: '/tools/behaviourgraphstudio',
       image: behaviorGraphStudioImage,
+      imageFit: 'cover' as const,
+    },
+    {
+      id: 'prismadesigner',
+      name: 'Prisma Designer',
+      tags: ['Browser Tool', 'PrismaUI F4'],
+      pitch: 'A no-install visual editor for building HTML/CSS/JavaScript views for PrismaUI F4, with export, binding, visual scripting, and optional live game preview.',
+      href: '/tools/prismadesigner',
+      image: prismaDesignerImage,
       imageFit: 'cover' as const,
     },
   ];
