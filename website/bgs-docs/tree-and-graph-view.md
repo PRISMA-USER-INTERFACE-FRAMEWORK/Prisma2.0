@@ -4,39 +4,133 @@ title: Tree & Graph View
 
 # Tree & Graph View
 
-Every open file gives you two ways to see the same data.
+Every loaded behaviour can be inspected in two main ways. The **Tree** tab is usually faster for locating exact objects. The **Graph** tab is better when you need to understand how states, generators, modifiers, and references connect.
+
+Both views point at the same underlying objects. Selecting an object in either view lets you inspect and edit its fields.
 
 ## Tree view
 
-Lists every object in the file by nesting, showing:
+The Tree tab presents the file as a nested object list. Depending on the object, rows can show:
 
-- The Havok class of each row (`hkbClipGenerator`, `hkbStateMachine`, `hkbBlenderGenerator`, and
-  so on).
-- The animation a clip node points at, if it has one.
-- The object's file offset, for when you need to cross-reference against raw bytes.
+- The Havok class, such as `hkbClipGenerator`, `hkbStateMachine`, or `hkbBlenderGenerator`.
+- An animation path when a clip references one.
+- The object's file offset for low-level cross-checking.
+- Children owned or referenced by the selected object.
+
+Use **Expand all** when you want a quick overview of the file. Use **Collapse all** before searching a very large hierarchy so the result is easier to read.
+
+### When Tree view is best
+
+Use Tree view when you already know what you are looking for, such as:
+
+- A specific animation filename.
+- A known Havok class.
+- A state or generator name.
+- An object you reached from a validation result.
+
+It is also useful when the graph has many crossing connections and you only need to inspect one object at a time.
 
 ## Graph view
 
-The same objects, laid out as a node canvas instead of a list:
+The Graph tab lays the same objects out as a node canvas.
 
-- Nodes are arranged in columns by depth from the root, so you can see how far something is from
-  the top of the graph at a glance.
-- Edges are drawn from the file's real reference fields and labelled with the field that owns
-  them. An edge always tells you *why* it exists, not just that two nodes are connected.
-- Nodes are coloured by class family, so states, generators, and modifiers are visually distinct.
-- Clip nodes show their animation path and any non-default playback speed directly on the node,
-  so you don't need to open the properties panel just to see what a clip plays.
+The canvas is designed to answer questions such as:
 
-## Finding what you need
+- What owns this generator?
+- What does this state point to?
+- Which field creates this connection?
+- Where does this transition go?
+- What else depends on this object?
 
-Type into the filter box to narrow the tree or graph by name, class, or animation. This is
-useful once you're working in a file with hundreds of objects.
+Edges come from real reference fields in the file and are labelled with the field responsible for the connection. That makes the graph useful for editing, not just visualization.
 
-## Highlighting one state's paths
+Clip nodes also surface useful information, including their animation path and non-default playback speed, so you can identify many clips without opening every properties panel.
 
-Right-click a node and choose "Highlight the paths of..." to see just that node's routes through
-the graph. Every unrelated wire and node drops to half opacity. This is the difference between
-a readable graph and a few hundred overlapping wires when you're trying to trace one specific
-state machine transition. Press Escape, or right-click again, to clear it.
+## Moving around the graph
 
-Once you've found the node you want to change, head to [Editing Nodes](editing-nodes).
+Two useful controls are available in the Graph view toolbar:
+
+- **Fit all** frames the visible graph.
+- **Fit selection** focuses the selected object and its related area.
+
+If you lose track of where you are after panning or zooming, **Fit all** is the fastest reset.
+
+### Tip: select first, then fit
+
+For a large graph, search for the object in the filter box, select it, then use **Fit selection**. This is usually faster than manually navigating across the canvas.
+
+## Filtering
+
+The filter box is one of the most useful controls in the application. It can help narrow the view by name, class, or animation text.
+
+Useful searches include:
+
+```text
+hkbClipGenerator
+hkbStateMachine
+reload
+idle
+dogmeat
+```
+
+Press Enter after filtering to jump to the first matching object.
+
+### Search by intent, not only by filename
+
+If you do not know the exact animation path, search for part of the action you are investigating. For example, `reload`, `attack`, `idle`, or an actor name can reveal related clips and states that would be hard to find by browsing manually.
+
+## Highlighting one object's paths
+
+Right-click a graph node and choose **Highlight the paths of...** to isolate its relevant path through the graph. Unrelated nodes and wires become less prominent so the selected route is easier to follow.
+
+This is especially useful for state machines with many transitions.
+
+Use path highlighting when you need to answer questions such as:
+
+- Which states can lead here?
+- Which generator is active under this state?
+- Which transition leaves this state?
+- Is this clip part of the path I am actually editing?
+
+Press Escape or clear the highlight when you are finished.
+
+## Understanding node relationships before editing
+
+Before deleting, reconnecting, or replacing a node, inspect both sides of the relationship.
+
+A useful checklist is:
+
+1. What object owns this node?
+2. Which field points to it?
+3. Does anything else also reference it?
+4. If it is a state, what generator does the state use?
+5. If it is a transition, what event or condition makes it fire?
+6. If it is a clip, which animation does it play?
+
+This prevents the common mistake of changing the object you can see while missing another reference that still depends on it.
+
+## Validation markers and problem navigation
+
+When **Check graph** reports a problem, selecting the result can take you back to the related graph object. Use that instead of manually searching for the object ID.
+
+A productive loop is:
+
+1. Run **Check graph**.
+2. Select a reported problem.
+3. Inspect the node and its nearby path.
+4. Make one correction.
+5. Run **Check graph** again.
+
+## Large graphs
+
+Very large behaviour files can be visually dense even with automatic layout. Do not try to understand the entire file at once.
+
+Instead:
+
+- Filter to the system you care about.
+- Highlight one path.
+- Use **Fit selection**.
+- Follow references outward from one known state or generator.
+- Use Tree view for exact object lookup and Graph view for relationships.
+
+Once you have found the object you need, continue with [Editing Nodes](editing-nodes).
