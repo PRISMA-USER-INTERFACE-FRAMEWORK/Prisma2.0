@@ -6,7 +6,10 @@ const sidebars: SidebarsConfig = {
     'tree-and-graph-view',
     'editing-nodes',
     'symbols-and-variables',
+    'animation-and-playback',
+    'compare-and-simulation',
     'saving-and-validating',
+    'troubleshooting-and-tips',
   ],
 };
 
